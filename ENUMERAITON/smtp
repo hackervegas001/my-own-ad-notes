@@ -1,0 +1,95 @@
+smtp 25
+smtp banner grabbing through telnet 
+ telnet x.x.x.x 25
+ vrfy admin@mail.lob.ignite
+ 
+ if you recieved message code 250,251,252 which means user account is valid .
+ 
+ Enumeraiton : - 
+ nmap -sV -P 25,465,587 x.x.x.x --open
+ 
+ nmap --script smtp-commands -p25 x.x.x.x 
+ nmap --script smtp-commands -p25 x.x.x.x | grep -Eo 'VRFY|EXPN|RCPT'
+ 
+ with verify method smtp-user-enum can be used to identify users from a given wordlists
+ 
+ smtp-user-enum -U <wordlists> -M VRFY -t x.x.x.x 
+ default wordlists is - /seclists/Usernames/Names/names.txt
+ 
+ smtp-user-enum -M VRFY -U /usr/share/wordlists/metasploit/unix_users.txt -t x.x.x.x
+ smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/xato-net-10-million-usernames-dup.txt -t x.x.x.x
+ 
+ metasploit : -
+ use auxilary/scanner/smtp/smtp_enum
+ 
+ vulnerability scanning :- 
+ nmap --script=smtp-commands,smtp-enum-users,smtp-vuln-cve2010-4344,smtp-vuln-cve2011-1720,smtp-vuln-cve2011-1764, -P 25 x.x.x.x
+ 
+ sending email :-
+ # mutt
+ echo "<body>" | mutt -s"<subject>" <recipient> -r <recipient> -a <attachement>
+ 
+ # sendmail
+ sendEmail -t <recipient> -f <sending address> -s x.x.x.x -u <subject> -a <attachement>
+ 
+ # swaks
+ swaks -s "<server>" -t "<recipient>" -f "<from address>" --header "subject." --body "" --attach <attachement>
+ 
+ 
+ telnet smtp send mail :- 
+ 
+ telnet x.x.x.x
+  # login 
+  user hackervegas001
+  pass hackervegas
+  # list message
+  list
+  # read message numbers
+  retr 1
+  # to read email using smtp for LFI /var/mail/validuserHere
+  EHLO hacker.anything.com
+  mail from:hacker@doesnt.matter
+  
+  rcpt to: valid victim@mail 
+  data
+  subject:email tittile 
+  <your.LFI.code.Here>
+  <new blank line>
+  
+  
+  vrfy user : -
+  nc -nv x.x.x.x 25
+  VRFY bob
+  # command to check if a user exists 
+  VRFY root
+  # command to ask the server if a user belongs to a mailing list
+  EXPN root
+  
+  vrfy script python : -
+  
+  #!/usr/bin/python
+    import socket
+    import sys
+    if len(sys.argv) !=3:
+      print"usage:vrfy.py <username> <ip>"
+      sys.exit(0)
+    
+    print "verifying user:" + sys.argv[1] + "with" + sys.argv[2]
+    try:
+        s=socket.socket(Socket.AF_INET,socket.SOCK_STREAM)
+        connect=s.connect((sys.argv[2],25))  # connect to the server 
+        banner=s.recv(1024)
+        print banner
+        s.send('VRFY' + sys.argv[1] + '\r\n') # vrfy a user
+        result=s.recv(1024)
+        print " there is some response:"
+        print result
+     except:
+        print " unable to verify server maybe offline/port/filtered/unopened"
+        s.close()
+     finally:
+        s.close() # close the socket
+        
+        
+        
+        
