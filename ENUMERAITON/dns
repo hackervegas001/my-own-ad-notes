@@ -1,0 +1,67 @@
+dns 53
+nmap -sC -sV -p53 x.x.x.x/24 
+nslookup x.x.x.x
+nmap x.x.x.x --script=dns-zone-transfer -p 53
+
+# dig deeper :- 
+dig axfr htb.local@x.x.x.x
+
+# find name servers
+host -t ns x.x.x.x
+
+# find txt records :- 
+host -t txt x.x.x.x
+
+# fierce -domain dns scanner :- 
+fierce -dns $domain
+
+# find email servers
+host -t mx x.x.x.x
+
+# subdomain bruteforcing using common hostname :- 
+for ip $(cat list.txt);do host $ip.website.com;done 
+for ip in $(seq 155 190);do host 50.7.67.$ip;done | grep -v " not fount" # reverse dns lookup brute forcing
+
+zone transfer requests:- 
+host -l $ip ns1.$ip
+host -l $ip ns2.$ip
+
+dns enumeration script:- 
+dnsrecon -d x.x.x.x -t axfr
+
+brute forcing using wordlist:-
+dnsrecon -d x.x.x.x -D list.txt -t brt
+
+find nameservers for a given domain :-
+host -t ns $ip | cat -d "" -f 4
+
+find the doamin name for a host 
+whois x.x.x.x
+
+theharvester finds subdomains in google,bing.etc:- 
+python theharverster.py -l 500 -b all -d x.x.x.x
+
+find dns A records by trying a list of common-subdomains from a wordlists :-
+nmap -p 80 --script dns-brute.nse domain.com
+python dnsscan.py -d domain.com -w wordlists.txt
+
+resove dns ip domain name :- 
+dig '@ x.x.x.x' -x 'x.x.x.x'  + nocookie
+
+bruteforcing :-
+fierce --domain 'domain.com' --range <range> --dns-servers <p> --subdomains-file '<wordlists>'
+
+brute force with bash :- 
+for name is $(Cat /usr/share/seclist/Discover/DNS/subdomains-top1million-20000.txt);do host $name.sportsfoo.com 'x.x.x.x' -w 2; done | grep 'has address'
+
+finaly:- 
+nslookup -query=mx '<domain>' -server '<dns ip>'
+nslookup -query=ns '<domain>' -server '<dns ip>'
+nslookup -query=any '<domain>' -server '<dns ip>'
+
+dig <domain>
+dig <domain> A
+dig <domain> AAAA
+dig <domain> PTR
+dig <domain> Ns
+dig <domain> MX
